@@ -1,0 +1,64 @@
+env:
+
+setup:
+  launch:
+    pwd: ../../substrate/node
+    cfg: launch-config.json
+    success:
+      wait:
+        stdout: "🚀 POLKADOT LAUNCH COMPLETE 🚀"
+        max_secs: 120
+
+tests:
+  - name: simple balance
+    watch:
+      nodes:
+        - Alice
+        - Bob
+        - Dave
+    steps:
+      - name: get balance test
+        nodes:
+          - Alice
+          - Bob
+        call:
+          method: query.system.account
+          args: [5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY]
+        success:
+          result:
+            nonce: 0
+            data.free: 10.0000 kUnit
+
+      - node: Alice
+        name: transfer amount to Bob
+        call:
+          sudo: false
+          method: tx.balances.transfer
+          args:
+            - 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty
+            - 12345
+          signer:
+            # optional, sr, ed
+            cipher: sr25519
+            seed: //Alice
+        success: # TODO!
+          when:
+            status:
+              # if many => rule "all of this"
+              in_block: true
+              # finalized: true
+          result:
+            events.length: 3
+
+      - name: check balance
+        nodes:
+          - Alice
+          - Bob
+          - Dave
+        call:
+          method: query.system.account
+          args: [5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY]
+        success:
+          result:
+            nonce: 1
+            data.free: 9.9999 kUnit
