@@ -2,7 +2,7 @@
 
 Framework for testing parachains.
 
-Project is in high development state.
+Project is in highly development state.
 
 ## Usage
 
