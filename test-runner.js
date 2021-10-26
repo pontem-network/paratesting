@@ -44,7 +44,7 @@ class TestRunner {
 
 	async run() {
 
-		let current = Promise.resolve();
+		let current;
 		for (const i in this.#cfg.steps) {
 			const step = this.#cfg.steps[i];
 			const ctx = new TestContext(
@@ -56,9 +56,15 @@ class TestRunner {
 			);
 
 			ctx.debug(`\t step ${i} :`, step);
-			current = current.then(this.run_step(i, step, ctx));
+
+			try{
+				current = await this.run_step(i, step, ctx);
+			} catch(e){
+				console.log(e);
+				return e;
+			}
 		}
-		await current;
+		return current;
 	}
 
 
@@ -76,10 +82,14 @@ class TestRunner {
 				(message) => { step_ctx.fail(message) },
 				(...args) => { step_ctx.log(`${key}`, ...args) },
 			);
-
-			all.push(this.run_step_for(i, ctx, step, node));
+			try{
+				let result = await this.run_step_for(i, ctx, step, node);
+				all.push(result);
+			}catch(e){
+				return Promise.reject(e);
+			}
 		}
-		return Promise.all(all);
+		return Promise.resolve(all);
 	}
 
 
@@ -106,7 +116,7 @@ class TestRunner {
 
 		const check = this.make_check(step, ctx);
 
-		return /* await */ method(ctx, call_info).then(check);
+		return method(ctx, call_info).then(check);
 		// return /* await */ method(ctx, call_info);
 		//.then((res) => { console.debug(`RESULT of ${i}`, res); res });
 	}

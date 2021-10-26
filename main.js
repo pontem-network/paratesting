@@ -45,11 +45,7 @@ async function main({ cases_dir }) {
 		(value, i, foo) => (value.toLowerCase().endsWith(".yaml") || value.toLowerCase().endsWith(".yml") ? value : null)
 	);
 
-	// console.log(files);
-
 	for (let file of files) {
-		// console.log("loading case:", file);
-
 		try {
 			const tasks = yaml.load(fs.readFileSync(path.join(cases_dir, file), "utf8"));
 
@@ -98,10 +94,11 @@ async function main({ cases_dir }) {
 				);
 				await runner.run();
 			}
-
+			runner_setup.result.process.kill();
 		} catch (error) {
 			console.error(error);
 			continue;
 		}
 	}
+    process.exit()
 }

@@ -27,7 +27,7 @@ tests:
         success:
           result:
             nonce: 0
-            data.free: 10.0000 kUnit
+            data.free: 10,000,000,000,000,000
 
       - node: Alice
         name: transfer amount to Bob
@@ -60,5 +60,5 @@ tests:
           args: [5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY]
         success:
           result:
-            nonce: 1
-            data.free: 9.9999 kUnit
+            nonce: 0
+            data.free: 10,000,000,000,000,000
