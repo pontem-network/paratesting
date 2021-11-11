@@ -1,0 +1,65 @@
+[package]
+name = "paratesting"
+version = "0.1.0"
+edition = "2021"
+resolver = "2"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-std = { version = "1.9.0", features = ["attributes", "tokio1"] }
+async-trait = "0.1.49"
+futures = "0.3.13"
+
+hex = "0.4.3"
+
+subprocess = "0.2.8"
+
+# evalexpr = "6.6"
+cel_parser = { package = "cel-parser", version = "0.2" }
+cel-interpreter = { package = "cel-interpreter", version = "0.2" }
+lalrpop = "=0.19.6"
+
+# toml = "0.5.8"
+serde_json = "1.0"
+serde_yaml = "0.8"
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+[dependencies.yaml-merge-keys]
+version = "0.4"
+package = "yaml-merge-keys"
+features = ["serde_yaml"]
+
+# substrate
+
+[dependencies.subxt]
+git = "https://github.com/paritytech/subxt.git"
+rev = "78fd590d17cdc21657c74837a066ea4d6e9beeaa" # master
+
+[dependencies.codec]
+package = "parity-scale-codec"
+version = "=2.3.1"
+default-features = false
+features = ["default", "std", "derive", "full", "bit-vec"]
+
+[dependencies.sp-keyring]
+git = "https://github.com/paritytech/substrate.git"
+rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
+
+[dependencies.sp-core]
+git = "https://github.com/paritytech/substrate.git"
+rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
+
+# [dependencies.sp-runtime]
+# git = "https://github.com/paritytech/substrate.git"
+# rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
+
+[features]
+github = []
+default = ["tokio1"]
+
+tokio02 = ["subxt/tokio02", "async-std/tokio02"]
+tokio1 = ["subxt/tokio1", "async-std/tokio1"]
