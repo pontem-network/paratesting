@@ -2,6 +2,7 @@ extern crate serde;
 extern crate serde_yaml;
 extern crate yaml_merge_keys;
 
+use std::time::Duration;
 use std::path::PathBuf;
 use std::io::prelude::*;
 use std::collections::BTreeMap as Map;
@@ -10,9 +11,6 @@ use serde::de::DeserializeOwned;
 
 use yaml_merge_keys::merge_keys_serde;
 use serde_yaml::Value;
-
-// yaml-rust
-// use yaml::{YamlLoader, YamlEmitter};
 
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -49,7 +47,6 @@ pub enum SetupCfg {
 		cfg: ProcessRunCfg<String>,
 		#[serde(flatten)]
 		conditions: ConditionsCfg,
-		#[serde(flatten)]
 		connect: ConnectCfg,
 	},
 
@@ -93,22 +90,25 @@ pub enum SupportedRuntime {
 }
 
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub struct PolkaLaunchCfg {
 	#[serde(flatten)]
-	pub inner: ProcessRunCfg<Option<String>>,
+	pub inner: ProcessRunCfg<Option<String>, Option<bool>>,
 	pub cfg: PathBuf,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct ProcessRunCfg<Cmd = String> {
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "kebab-case")]
+pub struct ProcessRunCfg<Cmd = String, KeepAlive = bool> {
 	pub pwd: Option<PathBuf>,
 	pub cmd: Cmd,
 	// TODO: shell
+	/// Keep this process alive after success/failure conditions are come.
+	pub keep_alive: KeepAlive,
 }
 
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub struct ConditionsCfg {
 	pub success: Option<Conditions>,
 	pub failure: Option<Conditions>,
@@ -122,7 +122,7 @@ pub struct ConditionsCfg {
 }
 
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "kebab-case")]
 pub enum Conditions {
 	Result(Map<String, Value>),
@@ -151,7 +151,7 @@ pub enum Conditions {
 }
 
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "kebab-case")]
 pub enum WaitLimit {
 	// TODO:
@@ -159,6 +159,17 @@ pub enum WaitLimit {
 	Secs(u64),
 	#[serde(alias = "ms")]
 	Millis(u64),
+}
+
+impl TryInto<Duration> for WaitLimit {
+	type Error = &'static str;
+
+	fn try_into(self) -> Result<Duration, Self::Error> {
+		match self {
+			WaitLimit::Secs(v) => Ok(Duration::from_secs(v)),
+			WaitLimit::Millis(v) => Ok(Duration::from_millis(v)),
+		}
+	}
 }
 
 

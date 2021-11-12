@@ -1312,8 +1312,7 @@ pub mod api {
 				const PALLET: &'static str = "Balances";
 				const EVENT: &'static str = "DustLost";
 			}
-			#[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-			#[derive(Debug)]
+			#[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
 			pub struct Transfer(
 			                    pub ::subxt::sp_core::crypto::AccountId32,
 			                    pub ::subxt::sp_core::crypto::AccountId32,

@@ -1,4 +1,5 @@
 #![feature(box_patterns)]
+#![feature(async_closure)]
 
 // TODO: remove this because used in launcher mod.
 extern crate subprocess;
@@ -25,6 +26,7 @@ use eval::Ctx;
 
 
 pub type BoxErr = Box<dyn std::error::Error>;
+pub type BoxRes<T, E = BoxErr> = Result<T, E>;
 
 
 // TODO: XXX: remove this:
@@ -92,19 +94,19 @@ async fn main() -> Result<(), BoxErr> {
 		// let suit = TestSuite::new(suit);
 		// let setup = Setup { cfg: &suit.setup };
 
-
+		let mut keep_alive_proc = None::<setup::ProcState>;
 		let (nodes, clients) = match suit.setup {
 			SetupCfg::PolkaLaunch { cfg, conditions } => {
-				let mut launcher = Setup::<PolkaLaunchCfg>::new(cfg, conditions);
-				launcher.run();
-				// TODO: if success => continue to SetupCfg::Connect(build ConnectCfg)
-				todo!()
+				let (nodes, clients, proc) = setup::run_polka_launch_proc(cfg, conditions).await?;
+				// TODO: keep_alive_proc = proc;
+				(nodes, clients)
 			},
-			SetupCfg::Process { .. } => {
-				todo!()
-				// TODO:
-				// let mut launcher = Setup::<ProcessRunCfg>::new(cfg, conditions);
-				// launcher.run();
+			SetupCfg::Process { cfg,
+			                    conditions,
+			                    connect, } => {
+				let proc = setup::run_proc(cfg, conditions).await?;
+				// TODO: keep_alive_proc = proc;
+				setup::create_clients_for_nodes(connect).await?
 			},
 			SetupCfg::Connect { cfg } => setup::create_clients_for_nodes(cfg).await?,
 		};

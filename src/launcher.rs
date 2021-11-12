@@ -1,22 +1,29 @@
 use std::io::BufRead;
 use std::io::BufReader;
 use std::path::Path;
-use std::time::Duration;
+use async_trait::async_trait;
 
 extern crate subprocess;
 use subprocess::Exec;
 use subprocess::Redirection;
 
+use crate::BoxErr;
 use crate::format;
 use format::suit::ConditionsCfg;
 use format::suit::PolkaLaunchCfg;
 use format::suit::ProcessRunCfg;
 
 
+#[async_trait]
 pub trait Launcher {
 	fn conditions(&self) -> &ConditionsCfg;
 	fn pwd(&self) -> Option<&Path>;
 	fn cmd(&self) -> &str;
+
+	async fn exec(&mut self) -> Result<(), BoxErr> {
+		//
+		Ok(())
+	}
 
 	fn run(&mut self) {
 		// build subprocess:
@@ -26,6 +33,14 @@ pub trait Launcher {
 		if let Some(pwd) = self.pwd() {
 			exec = exec.cwd(pwd);
 		}
+
+		// TODO: like bottom
+		// let mut p = exec.popen().unwrap();
+
+		// let (mut stdout, mut stderr) = (&mut p.stdout, &mut p.stderr);
+		// let (mut stdout, mut stderr) = (p.stdout.as_mut(), p.stderr.as_mut());
+		// let mut out = stdout.map(|s| BufReader::new(s));
+		// let err = stderr.map(|s| BufReader::new(s));
 
 		if let Some(conditions) = self.conditions().success.as_ref() {
 			use format::suit::Conditions;

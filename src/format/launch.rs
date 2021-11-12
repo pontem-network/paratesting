@@ -17,70 +17,70 @@ use serde_json::Value;
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Config {
-	relaychain: RelayChainConfig,
-	parachains: Vec<ParachainConfig>,
-	simple_parachains: Vec<SimpleParachainConfig>,
-	hrmp_channels: Vec<HrmpChannelsConfig>,
+	pub relaychain: RelayChainConfig,
+	pub parachains: Vec<ParachainConfig>,
+	pub simple_parachains: Vec<SimpleParachainConfig>,
+	pub hrmp_channels: Vec<HrmpChannelsConfig>,
 	#[serde(default)]
-	types: Map<String, Value>,
+	pub types: Map<String, Value>,
 	#[serde(default)]
-	finalization: bool,
+	pub finalization: bool,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RelayChainConfig {
-	bin: String,
-	chain: String,
-	nodes: Vec<BaseNodeConfig>,
-	genesis: Option<Value>,
+	pub bin: String,
+	pub chain: String,
+	pub nodes: Vec<BaseNodeConfig>,
+	pub genesis: Option<Value>,
 }
 
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ParachainConfig {
-	bin: String,
-	id: Option<String>,
-	balance: Option<String>,
-	chain: Option<String>,
-	nodes: Vec<ParachainNodeConfig>,
+	pub bin: String,
+	pub id: Option<String>,
+	pub balance: Option<String>,
+	pub chain: Option<String>,
+	pub nodes: Vec<ParachainNodeConfig>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SimpleParachainConfig {
-	bin: String,
-	id: String,
-	port: String,
-	balance: Option<String>,
+	pub bin: String,
+	pub id: String,
+	pub port: u32,
+	pub balance: Option<String>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ParachainNodeConfig {
-	rpc_port: Option<u32>,
+	pub rpc_port: Option<u32>,
 	#[serde(flatten)]
-	base: BaseNodeConfig,
+	pub base: BaseNodeConfig,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BaseNodeConfig {
-	name: Option<String>,
-	ws_port: u32,
-	port: u32,
-	base_path: Option<String>,
-	flags: Option<Vec<String>>,
+	pub name: Option<String>,
+	pub ws_port: u32,
+	pub port: u32,
+	pub base_path: Option<String>,
+	pub flags: Option<Vec<String>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct HrmpChannelsConfig {
-	sender: u64,
-	recipient: u64,
-	max_capacity: u64,
-	max_message_size: u64,
+	pub sender: u64,
+	pub recipient: u64,
+	pub max_capacity: u64,
+	pub max_message_size: u64,
 }
 
 

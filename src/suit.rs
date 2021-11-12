@@ -2,7 +2,6 @@ use std::path::PathBuf;
 use std::path::Path;
 use crate::BoxErr;
 use crate::format;
-use format::suit::ConditionsCfg;
 use format::suit::TestSuitCfg;
 
 
@@ -19,20 +18,23 @@ impl<Cfg> TestSuite<Cfg> {
 
 
 pub fn load_test_suit(path: &Path) -> Result<TestSuitCfg, BoxErr> {
+	println!("loading test-suit {}", path.display());
 	let f = std::fs::File::open(path)?;
-	Ok(format::suit::deserialize(f).map(|mut cfg: TestSuitCfg| {
-		                               // add fallback values if needed
-		                               if cfg.name.is_none() {
-			                               if let Some(name) = path.file_name()
-			                                                       .map(|f| f.to_str())
-			                                                       .flatten()
-			                                                       .map(|s| s.to_string())
-			                               {
-				                               cfg.name = Some(name);
-			                               }
-		                               }
-		                               cfg
-	                               })?)
+	let res = format::suit::deserialize(f).map(|mut cfg: TestSuitCfg| {
+		                                      // add fallback values if needed
+		                                      if cfg.name.is_none() {
+			                                      if let Some(name) = path.file_name()
+			                                                              .map(|f| f.to_str())
+			                                                              .flatten()
+			                                                              .map(|s| s.to_string())
+			                                      {
+				                                      cfg.name = Some(name);
+			                                      }
+		                                      }
+		                                      cfg
+	                                      });
+	println!("deserialize test-suit {:?}", res);
+	Ok(res?)
 }
 
 

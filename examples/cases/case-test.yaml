@@ -3,6 +3,11 @@
 logging: debug
 
 setup:
+  ## three options for setup:
+  ## - launch for polkadot-launch
+  ## - process for custom executable, script, etc...
+  ## - connect for just connect to specified nodes
+
   # launch:
   #   pwd: ./nodes
   #   cfg: launch-config.json
@@ -10,22 +15,47 @@ setup:
   #     wait:
   #       stdout: "🚀 POLKADOT LAUNCH COMPLETE 🚀"
   #       secs: 120
-  connect:
-    nodes:
-      - name: Pontem
-        port: 9946
-        log-file: 9946.log
-        runtime: pontem
-      - name: Alice
-        port: 9944
-        log-file: alice.log
-        runtime: rococo
-      - name: Bob
-        port: 9945
-        runtime: rococo
+
+  process:
+    pwd: ./nodes
+    cmd: polkadot-launch launch-config.json
+    keep-alive: true
+    success:
+      wait:
+        stdout: "🚀 POLKADOT LAUNCH COMPLETE 🚀"
+        secs: 10
+    failure:
+      stderr: error
+    connect:
+      nodes:
+        - name: Pontem
+          port: 9946
+          log-file: 9946.log
+          runtime: pontem
+        - name: Alice
+          port: 9944
+          log-file: alice.log
+          runtime: rococo
+        - name: Bob
+          port: 9945
+          runtime: rococo
+
+  # connect:
+  #   nodes:
+  #     - name: Pontem
+  #       port: 9946
+  #       log-file: 9946.log
+  #       runtime: pontem
+  #     - name: Alice
+  #       port: 9944
+  #       log-file: alice.log
+  #       runtime: rococo
+  #     - name: Bob
+  #       port: 9945
+  #       runtime: rococo
 
 tests:
-  - name: simple balance
+  - name: simple balance transfer
     steps:
       - name: test call
         nodes:
@@ -34,10 +64,11 @@ tests:
           method: tx.balances.transfer
           args:
             - //Bob
-            - 10000
+            - "10000"
           signer: //Alice
         success:
-          events: Balances::Transfer
+          events:
+            Balances::Transfer: true
           # result:
           #   nonce: 0
           #   data.free: 10.0000 kUnit
@@ -53,7 +84,7 @@ tests:
           method: tx.balances.transfer
           args:
             - //Bob
-            - 10000
+            - "10000"
           signer: //Alice
         success:
           result:
