@@ -8,56 +8,54 @@ use cel_interpreter::context::Context;
 
 pub type Ctx = Context;
 
-
 pub fn create_test_context() -> Result<Ctx, BoxErr> {
-	// let mut ctx = {
-	// 	use evalexpr::*;
-	// 	context_map! {
-	// 		"f" => Function::new(|argument| {
-	// 			if let Ok(int) = argument.as_int() {
-	// 				 Ok(Value::Int(int / 2))
-	// 			} else if let Ok(float) = argument.as_float() {
-	// 				 Ok(Value::Float(float / 2.0))
-	// 			} else {
-	// 				 Err(EvalexprError::expected_number(argument.clone()))
-	// 			}
-	// 		}),
-	// 	}?
-	// };
+    // let mut ctx = {
+    // 	use evalexpr::*;
+    // 	context_map! {
+    // 		"f" => Function::new(|argument| {
+    // 			if let Ok(int) = argument.as_int() {
+    // 				 Ok(Value::Int(int / 2))
+    // 			} else if let Ok(float) = argument.as_float() {
+    // 				 Ok(Value::Float(float / 2.0))
+    // 			} else {
+    // 				 Err(EvalexprError::expected_number(argument.clone()))
+    // 			}
+    // 		}),
+    // 	}?
+    // };
 
-	// Ok(ctx)
-	Ok(Context::default())
+    // Ok(ctx)
+    Ok(Context::default())
 }
-
 
 // subxt::ExtrinsicSuccess<api::pontem::api::DefaultConfig>
 pub fn add_events_to_context(ctx: &mut Ctx, events: &[subxt::RawEvent]) -> Result<(), BoxErr> {
-	// for e in events.iter() {
-	// 	let ty = format!("{}::{}", e.pallet, e.variant);
-	// 	ctx.add_variable(ty.clone(), CelType::Bool(true))?;
-	// 	// ctx.add_variable(format!("{}.data", ty), CelType::Bytes(hex::encode(&e.data.0)))?;
-	// 	ctx.add_variable(format!("{}.data", ty), CelType::Bytes(e.data.0))?;
-	// }
+    // for e in events.iter() {
+    // 	let ty = format!("{}::{}", e.pallet, e.variant);
+    // 	ctx.add_variable(ty.clone(), CelType::Bool(true))?;
+    // 	// ctx.add_variable(format!("{}.data", ty), CelType::Bytes(hex::encode(&e.data.0)))?;
+    // 	ctx.add_variable(format!("{}.data", ty), CelType::Bytes(e.data.0))?;
+    // }
 
-	// let events = CelType::Map(events.iter()
-	//                                 .map(|raw| Value::String(format!("{}::{}", raw.pallet, raw.variant)))
-	//                                 .collect());
-	// ctx.add_variable("events".to_owned(), events)?;
+    // let events = CelType::Map(events.iter()
+    //                                 .map(|raw| Value::String(format!("{}::{}", raw.pallet, raw.variant)))
+    //                                 .collect());
+    // ctx.add_variable("events".to_owned(), events)?;
 
-	Ok(())
+    Ok(())
 }
 
 /* TODO: impl this
 pub fn del_events_from_context(ctx: &mut Ctx, events: &[subxt::RawEvent]) -> Result<(), EvalexprError> {
-	let mut keys = Vec::new();
-	keys.push("events".to_owned());
-	for e in events.iter() {
-		let ty = format!("{}::{}", e.pallet, e.variant);
-		keys.push(ty.clone());
-		keys.push(format!("{}.data", ty));
-	}
-	// TODO: `*ctx =` create new one without `keys`
-	Ok(())
+    let mut keys = Vec::new();
+    keys.push("events".to_owned());
+    for e in events.iter() {
+        let ty = format!("{}::{}", e.pallet, e.variant);
+        keys.push(ty.clone());
+        keys.push(format!("{}.data", ty));
+    }
+    // TODO: `*ctx =` create new one without `keys`
+    Ok(())
 }
  */
 

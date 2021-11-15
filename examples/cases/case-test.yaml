@@ -23,7 +23,7 @@ setup:
     success:
       wait:
         stdout: "🚀 POLKADOT LAUNCH COMPLETE 🚀"
-        secs: 10
+        secs: 120
     failure:
       stderr: error
     connect:

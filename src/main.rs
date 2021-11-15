@@ -24,14 +24,11 @@ use setup::{Nodes, Clients};
 use api::NodeRuntimeApi;
 use eval::Ctx;
 
-
 pub type BoxErr = Box<dyn std::error::Error>;
 pub type BoxRes<T, E = BoxErr> = Result<T, E>;
 
-
 // TODO: XXX: remove this:
 static TEST_SUITS_DIR: &str = "examples/cases";
-
 
 use sp_keyring::AccountKeyring;
 use subxt::{ClientBuilder, PairSigner};
@@ -40,140 +37,142 @@ use subxt::ExtrinsicSuccess;
 // use subxt::codec;
 use subxt::ExtrinsicExtraData;
 
-
 fn filter_map_for_step<'a, T>(map: &'a BTreeMap<String, T>,
                               step: &'a Step)
                               -> Result<impl Iterator<Item = (&'a str, &'a T)> + 'a, BoxErr> {
-	Ok(map.into_iter().filter_map(|(name, v)| {
-		                  // TODO: case-insensitive comparison
-		                  if step.nodes.contains(name) {
-			                  Some((name.as_ref(), v))
-		                  } else {
-			                  None
-		                  }
-	                  }))
+    Ok(map.into_iter().filter_map(|(name, v)| {
+                          // TODO: case-insensitive comparison
+                          if step.nodes.contains(name) {
+                              Some((name.as_ref(), v))
+                          } else {
+                              None
+                          }
+                      }))
 }
 
+async fn do_test_step(nodes: &Nodes,
+                      clients: &Clients,
+                      step: &Step,
+                      ctx: &mut Ctx)
+                      -> Result<(), BoxErr> {
+    let _nodes = filter_map_for_step(nodes, step)?;
+    let clients = filter_map_for_step(clients, step)?;
 
-async fn do_test_step(nodes: &Nodes, clients: &Clients, step: &Step, ctx: &mut Ctx) -> Result<(), BoxErr> {
-	let _nodes = filter_map_for_step(nodes, step)?;
-	let clients = filter_map_for_step(clients, step)?;
+    match &step.action {
+        Action::Call { data } => {
+            for (name, client) in clients {
+                println!("\t call for node {}", name);
+                // TODO: report if error, then break the test
+                let res = api::call_to_node(client, data, ctx).await?;
+            }
+        }
 
-	match &step.action {
-		Action::Call { data } => {
-			for (name, client) in clients {
-				println!("\t call for node {}", name);
-				// TODO: report if error, then break the test
-				let res = api::call_to_node(client, data, ctx).await?;
-			}
-		},
+        Action::Rpc { method, args } => {
+            println!("TODO: rpc: {}({})", method, args.len());
+            unimplemented!()
+        }
 
-		Action::Rpc { method, args } => {
-			println!("TODO: rpc: {}({})", method, args.len());
-			unimplemented!()
-		},
+        _ => unimplemented!(),
+    }
 
-		_ => unimplemented!(),
-	}
-
-
-	Ok(())
+    Ok(())
 }
-
 
 #[async_std::main]
 async fn main() -> Result<(), BoxErr> {
-	// env_logger::init();
+    // env_logger::init();
 
-	// TODO: get dir/file-path from args
-	let suits = suit::load_requested_suits(&PathBuf::from(TEST_SUITS_DIR))?.collect::<Vec<_>>();
-	println!("loaded {} suits", suits.len());
+    // TODO: get dir/file-path from args
+    let suits = suit::load_requested_suits(&PathBuf::from(TEST_SUITS_DIR))?.collect::<Vec<_>>();
+    println!("loaded {} suits", suits.len());
 
+    for suit in suits {
+        // let suit = TestSuite::new(suit);
+        // let setup = Setup { cfg: &suit.setup };
 
-	for suit in suits {
-		// let suit = TestSuite::new(suit);
-		// let setup = Setup { cfg: &suit.setup };
+        let mut keep_alive_proc = None::<setup::ProcState>;
 
-		let mut keep_alive_proc = None::<setup::ProcState>;
-		let (nodes, clients) = match suit.setup {
-			SetupCfg::PolkaLaunch { cfg, conditions } => {
-				let (nodes, clients, proc) = setup::run_polka_launch_proc(cfg, conditions).await?;
-				// TODO: keep_alive_proc = proc;
-				(nodes, clients)
-			},
-			SetupCfg::Process { cfg,
-			                    conditions,
-			                    connect, } => {
-				let proc = setup::run_proc(cfg, conditions).await?;
-				// TODO: keep_alive_proc = proc;
-				setup::create_clients_for_nodes(connect).await?
-			},
-			SetupCfg::Connect { cfg } => setup::create_clients_for_nodes(cfg).await?,
-		};
+        let (nodes, clients) = match suit.setup {
+            SetupCfg::PolkaLaunch { cfg, conditions } => {
+                let (nodes, clients, proc) = setup::run_polka_launch_proc(cfg, conditions).await?;
+                // TODO: keep_alive_proc = proc;
+                (nodes, clients)
+            }
+            SetupCfg::Process { cfg,
+                                conditions,
+                                connect, } => {
+                let proc = setup::run_proc(cfg, conditions).await?;
+                // TODO: keep_alive_proc = proc;
+                setup::create_clients_for_nodes(connect).await?
+            }
+            SetupCfg::Connect { cfg } => setup::create_clients_for_nodes(cfg).await?,
+        };
 
-		for test in suit.tests {
-			println!("test {}", test.name);
+        for test in suit.tests {
+            println!("test {}", test.name);
 
-			// eval context:
-			let mut ctx = eval::create_test_context()?;
+            // eval context:
+            let mut ctx = eval::create_test_context()?;
 
-			for step in test.steps {
-				println!("step {}", step.name);
+            for step in test.steps {
+                println!("step {}", step.name);
 
-				do_test_step(&nodes, &clients, &step, &mut ctx).await?;
-			}
-		}
-	}
+                do_test_step(&nodes, &clients, &step, &mut ctx).await?;
+            }
+        }
 
-	return Ok(());
+        if let Some(proc) = keep_alive_proc {
+            // send TERM
+        }
+    }
 
-	/*
-		client.rpc()
-					.client
-					.request::<serde_json::Value>("rpc_methods", &[])
+    return Ok(());
 
-
-		// event:
-		if let Some(event) = result.find_event::<polkadot::balances::events::Transfer>()? {
-			println!("Balance transfer success: value: {:?}", event.2);
-		} else {
-			println!("Failed to find Balances::Transfer Event");
-		}
-	*/
+    /*
+        client.rpc()
+                    .client
+                    .request::<serde_json::Value>("rpc_methods", &[])
 
 
-	// let ws = "ws://127.0.0.1";
-	// let url_alice = format!("{}:{}", ws, 9944);
-	// let url_bob = format!("{}:{}", ws, 9945);
-	// let url_pontem = format!("{}:{}", ws, 9946);
+        // event:
+        if let Some(event) = result.find_event::<polkadot::balances::events::Transfer>()? {
+            println!("Balance transfer success: value: {:?}", event.2);
+        } else {
+            println!("Failed to find Balances::Transfer Event");
+        }
+    */
 
-	// // let signer = PairSigner::new(AccountKeyring::Alice.pair());
-	// // let dest = AccountKeyring::Bob.to_account_id().into();
+    // let ws = "ws://127.0.0.1";
+    // let url_alice = format!("{}:{}", ws, 9944);
+    // let url_bob = format!("{}:{}", ws, 9945);
+    // let url_pontem = format!("{}:{}", ws, 9946);
 
-	// {
-	// 	// Pontem
-	// 	{
-	// 		let mut client = ClientBuilder::new().set_url(&url_pontem)
-	// 		                                     .build::<pontem::DefaultConfig>()
-	// 		                                     .await?;
+    // // let signer = PairSigner::new(AccountKeyring::Alice.pair());
+    // // let dest = AccountKeyring::Bob.to_account_id().into();
 
-	// 		// let meta = client.rpc().metadata().await?;
-	// 		// println!("pontem.meta: {:#?}", meta);
+    // {
+    // 	// Pontem
+    // 	{
+    // 		let mut client = ClientBuilder::new().set_url(&url_pontem)
+    // 		                                     .build::<pontem::DefaultConfig>()
+    // 		                                     .await?;
 
+    // 		// let meta = client.rpc().metadata().await?;
+    // 		// println!("pontem.meta: {:#?}", meta);
 
-	// 		let api = client.to_runtime_api::<pontem::RuntimeApi<_>>();
-	// 		let mut iter = api.storage().system().account_iter(None).await?;
-	// 		while let Some((key, account)) = iter.next().await? {
-	// 			println!("{}: {}", hex::encode(key), account.data.free);
-	// 		}
+    // 		let api = client.to_runtime_api::<pontem::RuntimeApi<_>>();
+    // 		let mut iter = api.storage().system().account_iter(None).await?;
+    // 		while let Some((key, account)) = iter.next().await? {
+    // 			println!("{}: {}", hex::encode(key), account.data.free);
+    // 		}
 
-	// 		println!("pontem.move STORAGE:");
-	// 		let mut iter = api.storage().mvm().vm_storage_iter(None).await?;
-	// 		while let Some((key, value)) = iter.next().await? {
-	// 			println!("{}: {}", hex::encode(key), hex::encode(value));
-	// 		}
-	// 	}
-	// }
+    // 		println!("pontem.move STORAGE:");
+    // 		let mut iter = api.storage().mvm().vm_storage_iter(None).await?;
+    // 		while let Some((key, value)) = iter.next().await? {
+    // 			println!("{}: {}", hex::encode(key), hex::encode(value));
+    // 		}
+    // 	}
+    // }
 
-	Ok(())
+    Ok(())
 }
