@@ -1,3 +1,10 @@
+[workspace]
+members = [
+	# paratesting-sp-client
+	"client",
+]
+
+
 [package]
 name = "paratesting"
 version = "0.1.0"
@@ -14,6 +21,7 @@ futures-lite = "1.12.0"
 hex = "0.4.3"
 subprocess = "0.2.8"
 custom_error = "1.9.2"
+thiserror = "1.0.30"
 
 cel_parser = { package = "cel-parser", version = "0.2" }
 cel-interpreter = { package = "cel-interpreter", version = "0.2" }
@@ -33,6 +41,10 @@ features = ["serde_yaml"]
 
 
 # substrate #
+
+[dependencies.client]
+package = "paratesting-node-client"
+path = "client"
 
 [dependencies.subxt]
 git = "https://github.com/paritytech/subxt.git"

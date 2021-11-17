@@ -1941,6 +1941,7 @@ dependencies = [
  "futures-lite",
  "hex",
  "lalrpop",
+ "paratesting-node-client",
  "parity-scale-codec",
  "serde",
  "serde_json",
@@ -1949,7 +1950,19 @@ dependencies = [
  "sp-keyring",
  "subprocess",
  "subxt",
+ "thiserror",
  "yaml-merge-keys",
+]
+
+[[package]]
+name = "paratesting-node-client"
+version = "0.1.0"
+dependencies = [
+ "parity-scale-codec",
+ "serde",
+ "sp-core 4.0.0-dev (git+https://github.com/paritytech/substrate.git?rev=3b2ce548c6e00183ab12ab086859325164263584)",
+ "sp-keyring",
+ "subxt",
 ]
 
 [[package]]
