@@ -4,13 +4,14 @@ use std::path::{PathBuf, Path};
 use std::io::BufRead;
 use std::io::BufReader;
 
+use client::NodeRuntimeApi;
+
 use crate::BoxErr;
 use crate::BoxRes;
-use crate::api::NodeRuntimeApi;
 use crate::format;
 use format::suit::{ConditionsCfg, Conditions};
 use format::suit::{ConnectCfg, NodeCfg, PolkaLaunchCfg, ProcessRunCfg};
-use format::suit::SupportedRuntime;
+use client::SupportedRuntime;
 
 use subprocess::Popen;
 use subprocess::{Exec, Redirection};
@@ -21,12 +22,12 @@ pub type ProcState = ();
 
 pub async fn create_clients_for_nodes(cfg: ConnectCfg) -> BoxRes<(Nodes, Clients)> {
     let mut nodes = BTreeMap::new();
-    let mut clients = BTreeMap::new();
 
     for node in cfg.nodes.into_iter() {
-        clients.insert(node.name.to_owned(), NodeRuntimeApi::new(&node).await?);
         nodes.insert(node.name.to_owned(), node.clone());
     }
+
+    let clients = make_clients(&nodes).await?;
 
     Ok((nodes, clients))
 }
@@ -34,7 +35,11 @@ pub async fn create_clients_for_nodes(cfg: ConnectCfg) -> BoxRes<(Nodes, Clients
 pub async fn make_clients(nodes: &Nodes) -> BoxRes<Clients> {
     let mut clients = BTreeMap::new();
     for (name, node) in nodes.iter() {
-        clients.insert(name.to_owned(), NodeRuntimeApi::new(&node).await?);
+        // TODO: support custom ip
+        let ws = "ws://127.0.0.1";
+        let url = format!("{}:{}", ws, node.port);
+        clients.insert(name.to_owned(),
+                       NodeRuntimeApi::new(url, node.runtime).await?);
     }
     Ok(clients)
 }
@@ -64,8 +69,7 @@ pub async fn run_polka_launch_proc(cfg: PolkaLaunchCfg,
 }
 
 pub async fn run_proc<S>(cfg: ProcessRunCfg<S>, conditions: ConditionsCfg) -> BoxRes<ProcState>
-    where S: AsRef<OsStr>
-{
+    where S: AsRef<OsStr> {
     let mut exec = Exec::shell(cfg.cmd.as_ref()).stdout(Redirection::Pipe)
                                                 .stderr(Redirection::Pipe);
     if let Some(pwd) = cfg.pwd {

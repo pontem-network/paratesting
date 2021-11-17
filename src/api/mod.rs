@@ -16,56 +16,9 @@ use format::suit::{Test, Step, CallData};
 use format::suit::Action;
 use crate::eval::Ctx;
 
-#[subxt::subxt(runtime_metadata_path = "nodes/polkadot_metadata.scale",
-               generated_type_derives = "Clone, Debug")]
-pub mod polkadot {}
 
-// #[subxt::subxt(runtime_metadata_path = "nodes/pontem-xcmp.scale")]
-// #[subxt::subxt(runtime_metadata_path = "nodes/pontem.scale")]
-pub mod pontem;
-
-#[subxt::subxt(runtime_metadata_path = "nodes/rococo-local.scale",
-               generated_type_derives = "Clone, Debug")]
-pub mod rococo {}
-
-pub enum NodeRuntimeApi {
-    Pontem(pontem::RuntimeApi<pontem::DefaultConfig>),
-    Polkadot(polkadot::RuntimeApi<polkadot::DefaultConfig>),
-    Rococo(rococo::RuntimeApi<rococo::DefaultConfig>),
-}
-
-impl NodeRuntimeApi {
-    pub async fn new(cfg: &NodeCfg) -> Result<Self, BoxErr> {
-        use format::suit::SupportedRuntime;
-
-        // TODO: support custom ip
-        let ws = "ws://127.0.0.1";
-        let url = format!("{}:{}", ws, cfg.port);
-
-        let client = match cfg.runtime {
-			SupportedRuntime::Pontem => {
-				NodeRuntimeApi::Pontem(ClientBuilder::new().set_url(&url)
-				                                           .build::<pontem::DefaultConfig>()
-				                                           .await?
-				                                           .to_runtime_api::<pontem::RuntimeApi<_>>())
-			},
-			SupportedRuntime::Rococo => {
-				NodeRuntimeApi::Rococo(ClientBuilder::new().set_url(&url)
-				                                           .build::<rococo::DefaultConfig>()
-				                                           .await?
-				                                           .to_runtime_api::<rococo::RuntimeApi<_>>())
-			},
-			SupportedRuntime::Polkadot => {
-				NodeRuntimeApi::Polkadot(ClientBuilder::new().set_url(&url)
-				                                             .build::<polkadot::DefaultConfig>()
-				                                             .await?
-				                                             .to_runtime_api::<polkadot::RuntimeApi<_>>())
-			},
-		};
-
-        Ok(client)
-    }
-}
+use client::{pontem, polkadot, rococo};
+use client::{SupportedRuntime, NodeRuntimeApi};
 
 pub async fn call_to_node(client: &NodeRuntimeApi,
                           call: &CallData,
@@ -103,8 +56,6 @@ pub async fn call_to_node(client: &NodeRuntimeApi,
                 "balances" => {
                     match c {
                         "transfer" => {
-                            println!("TRANSFER: {}({:?})", call.method, call.args);
-
                             // TODO: ensure that call.args.len() == 2;
 
                             // TODO: ensure that call.signer.is_some
@@ -118,6 +69,8 @@ pub async fn call_to_node(client: &NodeRuntimeApi,
                             // 	AccountKeyring::Bob.to_account_id().into();
 
                             same_for_all!(client, |api| {
+                                println!("TRANSFER: {}({:?})", call.method, call.args);
+
                                 // let dest = AccountKeyring::Bob.to_account_id().into();
                                 // println!("dest: {:?}", dest);
 

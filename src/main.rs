@@ -4,6 +4,7 @@
 // TODO: remove this because used in launcher mod.
 extern crate subprocess;
 
+pub mod error;
 pub mod setup;
 pub mod format;
 pub mod launcher;
@@ -21,7 +22,7 @@ use format::suit::{Test, Step, CallData};
 use format::suit::Action;
 use launcher::{Setup, Launcher};
 use setup::{Nodes, Clients};
-use api::NodeRuntimeApi;
+use client::NodeRuntimeApi;
 use eval::Ctx;
 
 pub type BoxErr = Box<dyn std::error::Error>;
@@ -103,6 +104,7 @@ async fn main() -> Result<(), BoxErr> {
                                 connect, } => {
                 let proc = setup::run_proc(cfg, conditions).await?;
                 // TODO: keep_alive_proc = proc;
+                //
                 setup::create_clients_for_nodes(connect).await?
             }
             SetupCfg::Connect { cfg } => setup::create_clients_for_nodes(cfg).await?,
@@ -129,17 +131,17 @@ async fn main() -> Result<(), BoxErr> {
     return Ok(());
 
     /*
-        client.rpc()
-                    .client
-                    .request::<serde_json::Value>("rpc_methods", &[])
+         client.rpc()
+                         .client
+                         .request::<serde_json::Value>("rpc_methods", &[])
 
 
-        // event:
-        if let Some(event) = result.find_event::<polkadot::balances::events::Transfer>()? {
-            println!("Balance transfer success: value: {:?}", event.2);
-        } else {
-            println!("Failed to find Balances::Transfer Event");
-        }
+         // event:
+         if let Some(event) = result.find_event::<polkadot::balances::events::Transfer>()? {
+              println!("Balance transfer success: value: {:?}", event.2);
+         } else {
+              println!("Failed to find Balances::Transfer Event");
+         }
     */
 
     // let ws = "ws://127.0.0.1";

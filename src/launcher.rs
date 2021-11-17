@@ -123,15 +123,9 @@ impl Setup<PolkaLaunchCfg> {
 }
 
 impl Launcher for Setup<PolkaLaunchCfg> {
-    fn conditions(&self) -> &ConditionsCfg {
-        &self.conditions
-    }
-    fn pwd(&self) -> Option<&Path> {
-        self.cfg.inner.pwd.as_ref().map(|p| p.as_path())
-    }
-    fn cmd(&self) -> &str {
-        &self.cmd
-    }
+    fn conditions(&self) -> &ConditionsCfg { &self.conditions }
+    fn pwd(&self) -> Option<&Path> { self.cfg.inner.pwd.as_ref().map(|p| p.as_path()) }
+    fn cmd(&self) -> &str { &self.cmd }
 
     fn run(&mut self) {
         let mut exec = Exec::shell("tail -f ./test.txt").stdout(Redirection::Pipe)
@@ -192,13 +186,7 @@ impl Launcher for Setup<PolkaLaunchCfg> {
 }
 
 impl<S: AsRef<str>> Launcher for Setup<ProcessRunCfg<S>> {
-    fn conditions(&self) -> &ConditionsCfg {
-        &self.conditions
-    }
-    fn pwd(&self) -> Option<&Path> {
-        self.cfg.pwd.as_ref().map(|p| p.as_path())
-    }
-    fn cmd(&self) -> &str {
-        &self.cmd
-    }
+    fn conditions(&self) -> &ConditionsCfg { &self.conditions }
+    fn pwd(&self) -> Option<&Path> { self.cfg.pwd.as_ref().map(|p| p.as_path()) }
+    fn cmd(&self) -> &str { &self.cmd }
 }

@@ -101,7 +101,5 @@ mod tests {
     static TEST_LAUNCH_CFG: &str = include_str!("../../../../substrate/node/launch-config.json");
 
     #[test]
-    fn read_example_launch_config() {
-        deserialize_str::<_, Config>(TEST_LAUNCH_CFG).unwrap();
-    }
+    fn read_example_launch_config() { deserialize_str::<_, Config>(TEST_LAUNCH_CFG).unwrap(); }
 }

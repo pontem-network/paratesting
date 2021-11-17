@@ -1,0 +1,37 @@
+[package]
+name = "paratesting-node-client"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+# substrate
+
+[dependencies.subxt]
+git = "https://github.com/paritytech/subxt.git"
+rev = "78fd590d17cdc21657c74837a066ea4d6e9beeaa" # master
+
+[dependencies.codec]
+package = "parity-scale-codec"
+version = "=2.3.1"
+default-features = false
+features = ["default", "std", "derive", "full", "bit-vec"]
+
+[dependencies.sp-keyring]
+git = "https://github.com/paritytech/substrate.git"
+rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
+
+[dependencies.sp-core]
+git = "https://github.com/paritytech/substrate.git"
+rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
+
+# [dependencies.sp-runtime]
+# git = "https://github.com/paritytech/substrate.git"
+# rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master

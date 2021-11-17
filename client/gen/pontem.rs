@@ -135,9 +135,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn fill_block(&self,
                                   ratio: runtime_types::sp_arithmetic::per_things::Perbill)
                                   -> ::subxt::SubmittableExtrinsic<T, FillBlock> {
@@ -267,9 +265,7 @@ pub mod api {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "ExtrinsicCount";
                 type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct BlockWeight;
             impl ::subxt::StorageEntry for BlockWeight {
@@ -277,18 +273,14 @@ pub mod api {
                 const STORAGE: &'static str = "BlockWeight";
                 type Value =
                     runtime_types::frame_support::weights::PerDispatchClass<::core::primitive::u64>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct AllExtrinsicsLen;
             impl ::subxt::StorageEntry for AllExtrinsicsLen {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "AllExtrinsicsLen";
                 type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct BlockHash(pub ::core::primitive::u32);
             impl ::subxt::StorageEntry for BlockHash {
@@ -313,18 +305,14 @@ pub mod api {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "Number";
                 type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct ParentHash;
             impl ::subxt::StorageEntry for ParentHash {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "ParentHash";
                 type Value = ::subxt::sp_core::H256;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct Digest;
             impl ::subxt::StorageEntry for Digest {
@@ -332,9 +320,7 @@ pub mod api {
                 const STORAGE: &'static str = "Digest";
                 type Value =
                     runtime_types::sp_runtime::generic::digest::Digest<::subxt::sp_core::H256>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct Events;
             impl ::subxt::StorageEntry for Events {
@@ -347,18 +333,14 @@ pub mod api {
 						::subxt::sp_core::H256,
 					>,
 					>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct EventCount;
             impl ::subxt::StorageEntry for EventCount {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "EventCount";
                 type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct EventTopics(pub ::subxt::sp_core::H256);
             impl ::subxt::StorageEntry for EventTopics {
@@ -374,44 +356,34 @@ pub mod api {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "LastRuntimeUpgrade";
                 type Value = runtime_types::frame_system::LastRuntimeUpgradeInfo;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct UpgradedToU32RefCount;
             impl ::subxt::StorageEntry for UpgradedToU32RefCount {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "UpgradedToU32RefCount";
                 type Value = ::core::primitive::bool;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct UpgradedToTripleRefCount;
             impl ::subxt::StorageEntry for UpgradedToTripleRefCount {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "UpgradedToTripleRefCount";
                 type Value = ::core::primitive::bool;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct ExecutionPhase;
             impl ::subxt::StorageEntry for ExecutionPhase {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "ExecutionPhase";
                 type Value = runtime_types::frame_system::Phase;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }                pub async fn account (& self , _0 : :: subxt :: sp_core :: crypto :: AccountId32 , hash : :: core :: option :: Option < T :: Hash > ,) -> :: core :: result :: Result < runtime_types :: frame_system :: AccountInfo < :: core :: primitive :: u32 , runtime_types :: pallet_balances :: AccountData < :: core :: primitive :: u64 > > , :: subxt :: Error >{
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }                pub async fn account (& self , _0 : :: subxt :: sp_core :: crypto :: AccountId32 , hash : :: core :: option :: Option < T :: Hash > ,) -> :: core :: result :: Result < runtime_types :: frame_system :: AccountInfo < :: core :: primitive :: u32 , runtime_types :: pallet_balances :: AccountData < :: core :: primitive :: u64 > > , :: subxt :: Error >{
                     let entry = Account(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
@@ -561,17 +533,13 @@ pub mod api {
                 const PALLET: &'static str = "RandomnessCollectiveFlip";
                 const STORAGE: &'static str = "RandomMaterial";
                 type Value = ::std::vec::Vec<::subxt::sp_core::H256>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub async fn random_material(
                     &self,
                     hash: ::core::option::Option<T::Hash>)
@@ -602,9 +570,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn set(&self,
                            now: ::core::primitive::u64)
                            -> ::subxt::SubmittableExtrinsic<T, Set> {
@@ -620,26 +586,20 @@ pub mod api {
                 const PALLET: &'static str = "Timestamp";
                 const STORAGE: &'static str = "Now";
                 type Value = ::core::primitive::u64;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct DidUpdate;
             impl ::subxt::StorageEntry for DidUpdate {
                 const PALLET: &'static str = "Timestamp";
                 const STORAGE: &'static str = "DidUpdate";
                 type Value = ::core::primitive::bool;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub async fn now(
                     &self,
                     hash: ::core::option::Option<T::Hash>)
@@ -668,26 +628,20 @@ pub mod api {
                 const PALLET: &'static str = "TransactionPayment";
                 const STORAGE: &'static str = "NextFeeMultiplier";
                 type Value = runtime_types::sp_arithmetic::fixed_point::FixedU128;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageVersion;
             impl ::subxt::StorageEntry for StorageVersion {
                 const PALLET: &'static str = "TransactionPayment";
                 const STORAGE: &'static str = "StorageVersion";
                 type Value = runtime_types::pallet_transaction_payment::Releases;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub async fn next_fee_multiplier(
                     &self,
                     hash: ::core::option::Option<T::Hash>)
@@ -753,9 +707,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn sudo(&self,
                             call: runtime_types::pontem_runtime::Call)
                             -> ::subxt::SubmittableExtrinsic<T, Sudo> {
@@ -815,17 +767,13 @@ pub mod api {
                 const PALLET: &'static str = "Sudo";
                 const STORAGE: &'static str = "Key";
                 type Value = ::subxt::sp_core::crypto::AccountId32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub async fn key(
                     &self,
                     hash: ::core::option::Option<T::Hash>)
@@ -1234,17 +1182,13 @@ pub mod api {
                 const PALLET: &'static str = "ParachainInfo";
                 const STORAGE: &'static str = "ParachainId";
                 type Value = runtime_types::polkadot_parachain::primitives::Id;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub async fn parachain_id(
                     &self,
                     hash: ::core::option::Option<T::Hash>)
@@ -1334,9 +1278,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn transfer(&self,
                                 dest: ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
                                 value: ::core::primitive::u64)
@@ -1470,9 +1412,7 @@ pub mod api {
                 const PALLET: &'static str = "Balances";
                 const STORAGE: &'static str = "TotalIssuance";
                 type Value = ::core::primitive::u64;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct Account(pub ::subxt::sp_core::crypto::AccountId32);
             impl ::subxt::StorageEntry for Account {
@@ -1506,17 +1446,13 @@ pub mod api {
                 const PALLET: &'static str = "Balances";
                 const STORAGE: &'static str = "StorageVersion";
                 type Value = runtime_types::pallet_balances::Releases;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub async fn total_issuance(
                     &self,
                     hash: ::core::option::Option<T::Hash>)
@@ -1633,9 +1569,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn vest(&self) -> ::subxt::SubmittableExtrinsic<T, Vest> {
                     let call = Vest {};
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
@@ -1712,17 +1646,13 @@ pub mod api {
                 const PALLET: &'static str = "Vesting";
                 const STORAGE: &'static str = "StorageVersion";
                 type Value = runtime_types::pallet_vesting::Releases;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }                pub async fn vesting (& self , _0 : :: subxt :: sp_core :: crypto :: AccountId32 , hash : :: core :: option :: Option < T :: Hash > ,) -> :: core :: result :: Result < :: core :: option :: Option < runtime_types :: frame_support :: storage :: bounded_vec :: BoundedVec < runtime_types :: pallet_vesting :: vesting_info :: VestingInfo < :: core :: primitive :: u64 , :: core :: primitive :: u32 > > > , :: subxt :: Error >{
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }                pub async fn vesting (& self , _0 : :: subxt :: sp_core :: crypto :: AccountId32 , hash : :: core :: option :: Option < T :: Hash > ,) -> :: core :: result :: Result < :: core :: option :: Option < runtime_types :: frame_support :: storage :: bounded_vec :: BoundedVec < runtime_types :: pallet_vesting :: vesting_info :: VestingInfo < :: core :: primitive :: u64 , :: core :: primitive :: u32 > > > , :: subxt :: Error >{
                     let entry = Vesting(_0);
                     self.client.storage().fetch(&entry, hash).await
                 }
@@ -1899,9 +1829,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn set_staking_expectations(
                     &self,
                     expectations : runtime_types :: parachain_staking :: inflation :: Range < :: core :: primitive :: u64 >)
@@ -2255,36 +2183,28 @@ pub mod api {
                 const PALLET: &'static str = "ParachainStaking";
                 const STORAGE: &'static str = "DelayNominationExitsMigration";
                 type Value = ::core::primitive::bool;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct CollatorCommission;
             impl ::subxt::StorageEntry for CollatorCommission {
                 const PALLET: &'static str = "ParachainStaking";
                 const STORAGE: &'static str = "CollatorCommission";
                 type Value = runtime_types::sp_arithmetic::per_things::Perbill;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct TotalSelected;
             impl ::subxt::StorageEntry for TotalSelected {
                 const PALLET: &'static str = "ParachainStaking";
                 const STORAGE: &'static str = "TotalSelected";
                 type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct ParachainBondInfo;
             impl ::subxt::StorageEntry for ParachainBondInfo {
                 const PALLET: &'static str = "ParachainStaking";
                 const STORAGE: &'static str = "ParachainBondInfo";
                 type Value = runtime_types :: parachain_staking :: pallet :: ParachainBondConfig < :: subxt :: sp_core :: crypto :: AccountId32 > ;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct Round;
             impl ::subxt::StorageEntry for Round {
@@ -2292,9 +2212,7 @@ pub mod api {
                 const STORAGE: &'static str = "Round";
                 type Value =
                     runtime_types::parachain_staking::pallet::RoundInfo<::core::primitive::u32>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct NominatorState(pub ::subxt::sp_core::crypto::AccountId32);
             impl ::subxt::StorageEntry for NominatorState {
@@ -2340,27 +2258,21 @@ pub mod api {
                 const PALLET: &'static str = "ParachainStaking";
                 const STORAGE: &'static str = "SelectedCandidates";
                 type Value = ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct Total;
             impl ::subxt::StorageEntry for Total {
                 const PALLET: &'static str = "ParachainStaking";
                 const STORAGE: &'static str = "Total";
                 type Value = ::core::primitive::u64;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct CandidatePool;
             impl ::subxt::StorageEntry for CandidatePool {
                 const PALLET: &'static str = "ParachainStaking";
                 const STORAGE: &'static str = "CandidatePool";
                 type Value = runtime_types :: parachain_staking :: set :: OrderedSet < runtime_types :: parachain_staking :: pallet :: Bond < :: subxt :: sp_core :: crypto :: AccountId32 , :: core :: primitive :: u64 > > ;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct ExitQueue;
             impl ::subxt::StorageEntry for ExitQueue {
@@ -2368,18 +2280,14 @@ pub mod api {
                 const STORAGE: &'static str = "ExitQueue";
                 type Value = ::std::vec::Vec<(::subxt::sp_core::crypto::AccountId32,
                                               ::core::primitive::u32)>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct ExitQueue2;
             impl ::subxt::StorageEntry for ExitQueue2 {
                 const PALLET: &'static str = "ParachainStaking";
                 const STORAGE: &'static str = "ExitQueue2";
                 type Value = runtime_types::parachain_staking::pallet::ExitQ<::subxt::sp_core::crypto::AccountId32>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct AtStake(::core::primitive::u32,
                                ::subxt::sp_core::crypto::AccountId32);
@@ -2409,9 +2317,7 @@ pub mod api {
                 const PALLET: &'static str = "ParachainStaking";
                 const STORAGE: &'static str = "InflationConfig";
                 type Value = runtime_types::parachain_staking::inflation::InflationInfo<::core::primitive::u64>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct Points(pub ::core::primitive::u32);
             impl ::subxt::StorageEntry for Points {
@@ -2436,9 +2342,7 @@ pub mod api {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub async fn delay_nomination_exits_migration(
                     &self,
                     hash: ::core::option::Option<T::Hash>)
@@ -2616,9 +2520,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn set_author(&self,
                                   author: runtime_types::nimbus_primitives::nimbus_crypto::Public)
                                   -> ::subxt::SubmittableExtrinsic<T, SetAuthor> {
@@ -2634,17 +2536,13 @@ pub mod api {
                 const PALLET: &'static str = "AuthorInherent";
                 const STORAGE: &'static str = "Author";
                 type Value = ::subxt::sp_core::crypto::AccountId32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
 				pub async fn author(
 					&self,
 					hash: ::core::option::Option<T::Hash>)
@@ -2676,9 +2574,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn set_eligible(&self,
                                     new: runtime_types::sp_arithmetic::per_things::Percent)
                                     -> ::subxt::SubmittableExtrinsic<T, SetEligible>
@@ -2705,17 +2601,13 @@ pub mod api {
                 const PALLET: &'static str = "AuthorFilter";
                 const STORAGE: &'static str = "EligibleRatio";
                 type Value = runtime_types::sp_arithmetic::per_things::Percent;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub async fn eligible_ratio(
                     &self,
                     hash: ::core::option::Option<T::Hash>)
@@ -2762,9 +2654,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn add_association(&self,
                                        author_id: runtime_types::nimbus_primitives::nimbus_crypto::Public)
                                        -> ::subxt::SubmittableExtrinsic<T, AddAssociation>
@@ -2838,9 +2728,7 @@ pub mod api {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }                pub async fn mapping_with_deposit (& self , _0 : runtime_types :: nimbus_primitives :: nimbus_crypto :: Public , hash : :: core :: option :: Option < T :: Hash > ,) -> :: core :: result :: Result < :: core :: option :: Option < runtime_types :: pallet_author_mapping :: pallet :: RegistrationInfo < :: subxt :: sp_core :: crypto :: AccountId32 , :: core :: primitive :: u64 > > , :: subxt :: Error >{
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }                pub async fn mapping_with_deposit (& self , _0 : runtime_types :: nimbus_primitives :: nimbus_crypto :: Public , hash : :: core :: option :: Option < T :: Hash > ,) -> :: core :: result :: Result < :: core :: option :: Option < runtime_types :: pallet_author_mapping :: pallet :: RegistrationInfo < :: subxt :: sp_core :: crypto :: AccountId32 , :: core :: primitive :: u64 > > , :: subxt :: Error >{
                     let entry = MappingWithDeposit(_0);
                     self.client.storage().fetch(&entry, hash).await
                 }
@@ -2931,9 +2819,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn schedule(&self,
                                 when: ::core::primitive::u32,
                                 maybe_periodic: ::core::option::Option<(::core::primitive::u32,
@@ -3064,17 +2950,13 @@ pub mod api {
                 const PALLET: &'static str = "Scheduler";
                 const STORAGE: &'static str = "StorageVersion";
                 type Value = runtime_types::pallet_scheduler::Releases;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }                pub async fn agenda (& self , _0 : :: core :: primitive :: u32 , hash : :: core :: option :: Option < T :: Hash > ,) -> :: core :: result :: Result < :: std :: vec :: Vec < :: core :: option :: Option < runtime_types :: pallet_scheduler :: ScheduledV2 < runtime_types :: pontem_runtime :: Call , :: core :: primitive :: u32 , runtime_types :: pontem_runtime :: OriginCaller , :: subxt :: sp_core :: crypto :: AccountId32 > > > , :: subxt :: Error >{
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }                pub async fn agenda (& self , _0 : :: core :: primitive :: u32 , hash : :: core :: option :: Option < T :: Hash > ,) -> :: core :: result :: Result < :: std :: vec :: Vec < :: core :: option :: Option < runtime_types :: pallet_scheduler :: ScheduledV2 < runtime_types :: pontem_runtime :: Call , :: core :: primitive :: u32 , runtime_types :: pontem_runtime :: OriginCaller , :: subxt :: sp_core :: crypto :: AccountId32 > > > , :: subxt :: Error >{
                     let entry = Agenda(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
@@ -3152,9 +3034,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn propose_spend(&self,
                                      value: ::core::primitive::u64,
                                      beneficiary : :: subxt :: sp_runtime :: MultiAddress < :: subxt :: sp_core :: crypto :: AccountId32 , () >)
@@ -3234,9 +3114,7 @@ pub mod api {
                 const PALLET: &'static str = "Treasury";
                 const STORAGE: &'static str = "ProposalCount";
                 type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct Proposals(pub ::core::primitive::u32);
             impl ::subxt::StorageEntry for Proposals {
@@ -3254,17 +3132,13 @@ pub mod api {
                 const PALLET: &'static str = "Treasury";
                 const STORAGE: &'static str = "Approvals";
                 type Value = runtime_types::frame_support::storage::bounded_vec::BoundedVec<::core::primitive::u32>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub async fn proposal_count(
                     &self,
                     hash: ::core::option::Option<T::Hash>)
@@ -3514,9 +3388,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn propose(&self,
                                proposal_hash: ::subxt::sp_core::H256,
                                value: ::core::primitive::u64)
@@ -3832,9 +3704,7 @@ pub mod api {
                 const PALLET: &'static str = "Democracy";
                 const STORAGE: &'static str = "PublicPropCount";
                 type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct PublicProps;
             impl ::subxt::StorageEntry for PublicProps {
@@ -3843,9 +3713,7 @@ pub mod api {
                 type Value = ::std::vec::Vec<(::core::primitive::u32,
                                               ::subxt::sp_core::H256,
                                               ::subxt::sp_core::crypto::AccountId32)>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct DepositOf(pub ::core::primitive::u32);
             impl ::subxt::StorageEntry for DepositOf {
@@ -3878,18 +3746,14 @@ pub mod api {
                 const PALLET: &'static str = "Democracy";
                 const STORAGE: &'static str = "ReferendumCount";
                 type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct LowestUnbaked;
             impl ::subxt::StorageEntry for LowestUnbaked {
                 const PALLET: &'static str = "Democracy";
                 const STORAGE: &'static str = "LowestUnbaked";
                 type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct ReferendumInfoOf(pub ::core::primitive::u32);
             impl ::subxt::StorageEntry for ReferendumInfoOf {
@@ -3930,9 +3794,7 @@ pub mod api {
                 const PALLET: &'static str = "Democracy";
                 const STORAGE: &'static str = "LastTabledWasExternal";
                 type Value = ::core::primitive::bool;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct NextExternal;
             impl ::subxt::StorageEntry for NextExternal {
@@ -3940,9 +3802,7 @@ pub mod api {
                 const STORAGE: &'static str = "NextExternal";
                 type Value = (::subxt::sp_core::H256,
                               runtime_types::pallet_democracy::vote_threshold::VoteThreshold);
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct Blacklist(pub ::subxt::sp_core::H256);
             impl ::subxt::StorageEntry for Blacklist {
@@ -3974,17 +3834,13 @@ pub mod api {
                 const PALLET: &'static str = "Democracy";
                 const STORAGE: &'static str = "StorageVersion";
                 type Value = runtime_types::pallet_democracy::Releases;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub async fn public_prop_count(
                     &self,
                     hash: ::core::option::Option<T::Hash>)
@@ -4139,9 +3995,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
             }
         }
         pub type Event = runtime_types::cumulus_pallet_xcmp_queue::pallet::Event;
@@ -4192,9 +4046,7 @@ pub mod api {
                 const PALLET: &'static str = "XcmpQueue";
                 const STORAGE: &'static str = "InboundXcmpStatus";
                 type Value = :: std :: vec :: Vec < (runtime_types :: polkadot_parachain :: primitives :: Id , runtime_types :: cumulus_pallet_xcmp_queue :: InboundStatus , :: std :: vec :: Vec < (:: core :: primitive :: u32 , runtime_types :: polkadot_parachain :: primitives :: XcmpMessageFormat ,) > ,) > ;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct InboundXcmpMessages(runtime_types::polkadot_parachain::primitives::Id,
                                            ::core::primitive::u32);
@@ -4216,9 +4068,7 @@ pub mod api {
                                      ::core::primitive::bool,
                                      ::core::primitive::u16,
                                      ::core::primitive::u16)>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct OutboundXcmpMessages(runtime_types::polkadot_parachain::primitives::Id,
                                             ::core::primitive::u16);
@@ -4244,17 +4094,13 @@ pub mod api {
                 const PALLET: &'static str = "XcmpQueue";
                 const STORAGE: &'static str = "QueueConfig";
                 type Value = runtime_types::cumulus_pallet_xcmp_queue::QueueConfigData;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }                pub async fn inbound_xcmp_status (& self , hash : :: core :: option :: Option < T :: Hash > ,) -> :: core :: result :: Result < :: std :: vec :: Vec < (runtime_types :: polkadot_parachain :: primitives :: Id , runtime_types :: cumulus_pallet_xcmp_queue :: InboundStatus , :: std :: vec :: Vec < (:: core :: primitive :: u32 , runtime_types :: polkadot_parachain :: primitives :: XcmpMessageFormat ,) > ,) > , :: subxt :: Error >{
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }                pub async fn inbound_xcmp_status (& self , hash : :: core :: option :: Option < T :: Hash > ,) -> :: core :: result :: Result < :: std :: vec :: Vec < (runtime_types :: polkadot_parachain :: primitives :: Id , runtime_types :: cumulus_pallet_xcmp_queue :: InboundStatus , :: std :: vec :: Vec < (:: core :: primitive :: u32 , runtime_types :: polkadot_parachain :: primitives :: XcmpMessageFormat ,) > ,) > , :: subxt :: Error >{
                     let entry = InboundXcmpStatus;
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
@@ -4407,9 +4253,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn send(&self,
                             dest: runtime_types::xcm::VersionedMultiLocation,
                             message: runtime_types::xcm::VersionedXcm)
@@ -4626,9 +4470,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
             }
         }
         pub type Event = runtime_types::cumulus_pallet_xcm::pallet::Event;
@@ -4674,9 +4516,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn service_overweight(
                     &self,
                     index: ::core::primitive::u64,
@@ -4740,18 +4580,14 @@ pub mod api {
                 const PALLET: &'static str = "DmpQueue";
                 const STORAGE: &'static str = "Configuration";
                 type Value = runtime_types::cumulus_pallet_dmp_queue::ConfigData;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct PageIndex;
             impl ::subxt::StorageEntry for PageIndex {
                 const PALLET: &'static str = "DmpQueue";
                 const STORAGE: &'static str = "PageIndex";
                 type Value = runtime_types::cumulus_pallet_dmp_queue::PageIndexData;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
+                fn key(&self) -> ::subxt::StorageEntryKey { ::subxt::StorageEntryKey::Plain }
             }
             pub struct Pages(pub ::core::primitive::u32);
             impl ::subxt::StorageEntry for Pages {
@@ -4776,9 +4612,7 @@ pub mod api {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub async fn configuration(
                     &self,
                     hash: ::core::option::Option<T::Hash>)
@@ -4876,9 +4710,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn execute(&self,
                                tx_bc: ::std::vec::Vec<::core::primitive::u8>,
                                gas_limit: ::core::primitive::u64)
@@ -4944,9 +4776,7 @@ pub mod api {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
 				pub async fn vm_storage(
 					&self,
 					_0: ::std::vec::Vec<::core::primitive::u8>,
@@ -5025,9 +4855,7 @@ pub mod api {
             impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
                 where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
             {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }
                 pub fn as_multi_threshold1(
                     &self,
                     other_signatories: ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
@@ -5162,9 +4990,7 @@ pub mod api {
                 client: &'a ::subxt::Client<T>,
             }
             impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }                pub async fn multisigs (& self , _0 : :: subxt :: sp_core :: crypto :: AccountId32 , _1 : [:: core :: primitive :: u8 ; 32usize] , hash : :: core :: option :: Option < T :: Hash > ,) -> :: core :: result :: Result < :: core :: option :: Option < runtime_types :: pallet_multisig :: Multisig < :: core :: primitive :: u32 , :: core :: primitive :: u64 , :: subxt :: sp_core :: crypto :: AccountId32 > > , :: subxt :: Error >{
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self { Self { client } }                pub async fn multisigs (& self , _0 : :: subxt :: sp_core :: crypto :: AccountId32 , _1 : [:: core :: primitive :: u8 ; 32usize] , hash : :: core :: option :: Option < T :: Hash > ,) -> :: core :: result :: Result < :: core :: option :: Option < runtime_types :: pallet_multisig :: Multisig < :: core :: primitive :: u32 , :: core :: primitive :: u64 , :: subxt :: sp_core :: crypto :: AccountId32 > > , :: subxt :: Error >{
                     let entry = Multisigs(_0, _1);
                     self.client.storage().fetch(&entry, hash).await
                 }
@@ -9386,18 +9212,12 @@ pub mod api {
     impl<T> ::core::convert::From<::subxt::Client<T>> for RuntimeApi<T>
         where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
     {
-        fn from(client: ::subxt::Client<T>) -> Self {
-            Self { client }
-        }
+        fn from(client: ::subxt::Client<T>) -> Self { Self { client } }
     }
     impl<'a, T> RuntimeApi<T> where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>
     {
-        pub fn storage(&'a self) -> StorageApi<'a, T> {
-            StorageApi { client: &self.client }
-        }
-        pub fn tx(&'a self) -> TransactionApi<'a, T> {
-            TransactionApi { client: &self.client }
-        }
+        pub fn storage(&'a self) -> StorageApi<'a, T> { StorageApi { client: &self.client } }
+        pub fn tx(&'a self) -> TransactionApi<'a, T> { TransactionApi { client: &self.client } }
     }
     pub struct StorageApi<'a, T>
         where T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>

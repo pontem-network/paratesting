@@ -68,23 +68,8 @@ pub struct ConnectCfg {
 pub struct NodeCfg {
     pub name: String,
     pub port: u32,
-    pub runtime: SupportedRuntime,
+    pub runtime: client::SupportedRuntime,
     pub log_file: Option<PathBuf>,
-}
-
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
-#[serde(rename_all = "kebab-case")]
-pub enum SupportedRuntime {
-    /// Generic polkadot runtime
-    /// TODO: describe version here
-    #[serde(alias = "polka")]
-    Polkadot,
-
-    /// TODO: describe version here
-    Pontem,
-
-    /// TODO: describe version here
-    Rococo,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
@@ -217,9 +202,7 @@ pub enum LoggingCfg {
 }
 
 impl Default for LoggingCfg {
-    fn default() -> Self {
-        LoggingCfg::Tests
-    }
+    fn default() -> Self { LoggingCfg::Tests }
 }
 
 impl From<bool> for LoggingCfg {
