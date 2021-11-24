@@ -6,6 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+log = "0.4"
+hex = "0.4.3"
+thiserror = "1.0.30"
 
 
 [dependencies.serde]
@@ -16,22 +19,34 @@ features = ["derive"]
 
 [dependencies.subxt]
 git = "https://github.com/paritytech/subxt.git"
-rev = "78fd590d17cdc21657c74837a066ea4d6e9beeaa" # master
+# rev = "78fd590d17cdc21657c74837a066ea4d6e9beeaa" # master
 
 [dependencies.codec]
 package = "parity-scale-codec"
-version = "=2.3.1"
+version = "2.3"
 default-features = false
-features = ["default", "std", "derive", "full", "bit-vec"]
+# features = ["default", "std", "derive", "full", "bit-vec"]
+features = ["derive", "full", "bit-vec"]
 
 [dependencies.sp-keyring]
 git = "https://github.com/paritytech/substrate.git"
-rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
+# rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
 
-[dependencies.sp-core]
-git = "https://github.com/paritytech/substrate.git"
-rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
+# [dependencies.sp-core]
+# git = "https://github.com/paritytech/substrate.git"
+# rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
 
 # [dependencies.sp-runtime]
 # git = "https://github.com/paritytech/substrate.git"
 # rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
+
+
+[features]
+default = [
+	"runtime-pontem",
+	"runtime-polkadot",
+	"runtime-rococo"
+]
+runtime-pontem = []
+runtime-polkadot = []
+runtime-rococo = []

@@ -1,30 +1,19 @@
 extern crate cel_interpreter;
 extern crate cel_parser;
-use crate::BoxErr;
 use cel_interpreter::objects::CelType;
 use cel_parser::Expression;
 use cel_interpreter::Program;
 use cel_interpreter::context::Context;
 
+use crate::BoxErr;
+use client::subxt;
+
 pub type Ctx = Context;
 
-pub fn create_test_context() -> Result<Ctx, BoxErr> {
-    // let mut ctx = {
-    // 	use evalexpr::*;
-    // 	context_map! {
-    // 		"f" => Function::new(|argument| {
-    // 			if let Ok(int) = argument.as_int() {
-    // 				 Ok(Value::Int(int / 2))
-    // 			} else if let Ok(float) = argument.as_float() {
-    // 				 Ok(Value::Float(float / 2.0))
-    // 			} else {
-    // 				 Err(EvalexprError::expected_number(argument.clone()))
-    // 			}
-    // 		}),
-    // 	}?
-    // };
 
-    // Ok(ctx)
+pub fn create_test_context() -> Result<Ctx, BoxErr> {
+    // just now ret empty ctx
+    // TODO: fill with global ctx
     Ok(Context::default())
 }
 

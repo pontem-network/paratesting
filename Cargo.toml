@@ -1,8 +1,5 @@
 [workspace]
-members = [
-	# paratesting-sp-client
-	"client",
-]
+members = [".", "client"]
 
 
 [package]
@@ -20,8 +17,14 @@ futures-lite = "1.12.0"
 
 hex = "0.4.3"
 subprocess = "0.2.8"
+# TODO: remove this:
 custom_error = "1.9.2"
 thiserror = "1.0.30"
+
+log = "0.4"
+env_logger = "0.9"
+pretty_env_logger = "0.4"
+structopt = "0.3"
 
 cel_parser = { package = "cel-parser", version = "0.2" }
 cel-interpreter = { package = "cel-interpreter", version = "0.2" }
@@ -45,32 +48,17 @@ features = ["serde_yaml"]
 [dependencies.client]
 package = "paratesting-node-client"
 path = "client"
-
-[dependencies.subxt]
-git = "https://github.com/paritytech/subxt.git"
-rev = "78fd590d17cdc21657c74837a066ea4d6e9beeaa" # master
-
-[dependencies.codec]
-package = "parity-scale-codec"
-version = "=2.3.1"
 default-features = false
-features = ["default", "std", "derive", "full", "bit-vec"]
 
-[dependencies.sp-keyring]
-git = "https://github.com/paritytech/substrate.git"
-rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
-
-[dependencies.sp-core]
-git = "https://github.com/paritytech/substrate.git"
-rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
-
-# [dependencies.sp-runtime]
-# git = "https://github.com/paritytech/substrate.git"
-# rev = "3b2ce548c6e00183ab12ab086859325164263584"    # master
 
 [features]
+default = [
+	"runtime-pontem",
+	"runtime-polkadot",
+	"runtime-rococo",
+	# "github"
+]
 github = []
-default = ["tokio1"]
-
-tokio02 = ["subxt/tokio02", "async-std/tokio02"]
-tokio1 = ["subxt/tokio1", "async-std/tokio1"]
+runtime-pontem = ["client/runtime-pontem"]
+runtime-polkadot = ["client/runtime-polkadot"]
+runtime-rococo = ["client/runtime-rococo"]

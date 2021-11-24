@@ -31,7 +31,7 @@ wrap_comments = false
 # lines
 blank_lines_upper_bound = 2
 blank_lines_lower_bound = 0
-single_line_if_else_max_width = 60
+single_line_if_else_max_width = 70
 empty_item_single_line = true
 struct_lit_single_line = true
 fn_single_line = true

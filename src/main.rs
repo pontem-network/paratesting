@@ -4,16 +4,22 @@
 // TODO: remove this because used in launcher mod.
 extern crate subprocess;
 
+#[macro_use]
+extern crate log;
+
+pub mod logger;
 pub mod error;
 pub mod setup;
 pub mod format;
 pub mod launcher;
 pub mod suit;
-pub mod eval;
 pub mod api;
+pub mod conditions;
 
 use std::path::PathBuf;
 use std::collections::BTreeMap;
+
+use structopt::StructOpt;
 
 use format::suit::SetupCfg;
 use format::suit::PolkaLaunchCfg;
@@ -23,14 +29,13 @@ use format::suit::Action;
 use launcher::{Setup, Launcher};
 use setup::{Nodes, Clients};
 use client::NodeRuntimeApi;
-use eval::Ctx;
+use conditions::eval::Ctx;
 
 pub type BoxErr = Box<dyn std::error::Error>;
 pub type BoxRes<T, E = BoxErr> = Result<T, E>;
 
-// TODO: XXX: remove this:
-static TEST_SUITS_DIR: &str = "examples/cases";
 
+use client::{subxt, sp_keyring};
 use sp_keyring::AccountKeyring;
 use subxt::{ClientBuilder, PairSigner};
 use subxt::EventsDecoder;
@@ -79,12 +84,26 @@ async fn do_test_step(nodes: &Nodes,
     Ok(())
 }
 
+#[derive(StructOpt, Debug)]
+struct Args {
+    /// Input file or directory.
+    /// For example use "examples/cases"
+    #[structopt(short, long, parse(from_os_str))]
+    input: PathBuf,
+}
+
+
 #[async_std::main]
 async fn main() -> Result<(), BoxErr> {
-    // env_logger::init();
+    logger::init_logger();
+
+    // TODO: use from_args_safe for github, then error!(err).
+    let opt = Args::from_args();
+    println!("{:#?}", opt);
 
     // TODO: get dir/file-path from args
-    let suits = suit::load_requested_suits(&PathBuf::from(TEST_SUITS_DIR))?.collect::<Vec<_>>();
+    // let suits = suit::load_requested_suits(&PathBuf::from(TEST_SUITS_DIR))?.collect::<Vec<_>>();
+    let suits = suit::load_requested_suits(&opt.input)?.collect::<Vec<_>>();
     println!("loaded {} suits", suits.len());
 
     for suit in suits {
@@ -114,7 +133,7 @@ async fn main() -> Result<(), BoxErr> {
             println!("test {}", test.name);
 
             // eval context:
-            let mut ctx = eval::create_test_context()?;
+            let mut ctx = conditions::eval::create_test_context()?;
 
             for step in test.steps {
                 println!("step {}", step.name);
@@ -127,8 +146,6 @@ async fn main() -> Result<(), BoxErr> {
             // send TERM
         }
     }
-
-    return Ok(());
 
     /*
          client.rpc()
@@ -143,38 +160,6 @@ async fn main() -> Result<(), BoxErr> {
               println!("Failed to find Balances::Transfer Event");
          }
     */
-
-    // let ws = "ws://127.0.0.1";
-    // let url_alice = format!("{}:{}", ws, 9944);
-    // let url_bob = format!("{}:{}", ws, 9945);
-    // let url_pontem = format!("{}:{}", ws, 9946);
-
-    // // let signer = PairSigner::new(AccountKeyring::Alice.pair());
-    // // let dest = AccountKeyring::Bob.to_account_id().into();
-
-    // {
-    // 	// Pontem
-    // 	{
-    // 		let mut client = ClientBuilder::new().set_url(&url_pontem)
-    // 		                                     .build::<pontem::DefaultConfig>()
-    // 		                                     .await?;
-
-    // 		// let meta = client.rpc().metadata().await?;
-    // 		// println!("pontem.meta: {:#?}", meta);
-
-    // 		let api = client.to_runtime_api::<pontem::RuntimeApi<_>>();
-    // 		let mut iter = api.storage().system().account_iter(None).await?;
-    // 		while let Some((key, account)) = iter.next().await? {
-    // 			println!("{}: {}", hex::encode(key), account.data.free);
-    // 		}
-
-    // 		println!("pontem.move STORAGE:");
-    // 		let mut iter = api.storage().mvm().vm_storage_iter(None).await?;
-    // 		while let Some((key, value)) = iter.next().await? {
-    // 			println!("{}: {}", hex::encode(key), hex::encode(value));
-    // 		}
-    // 	}
-    // }
 
     Ok(())
 }

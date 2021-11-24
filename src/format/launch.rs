@@ -98,7 +98,7 @@ pub fn serialize_str(doc: &Config) -> Result<String, impl std::error::Error> {
 mod tests {
     use super::*;
 
-    static TEST_LAUNCH_CFG: &str = include_str!("../../../../substrate/node/launch-config.json");
+    static TEST_LAUNCH_CFG: &str = include_str!("../../tests/assets/launch-config.json");
 
     #[test]
     fn read_example_launch_config() { deserialize_str::<_, Config>(TEST_LAUNCH_CFG).unwrap(); }

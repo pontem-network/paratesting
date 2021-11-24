@@ -9,6 +9,7 @@ use client::NodeRuntimeApi;
 use crate::BoxErr;
 use crate::BoxRes;
 use crate::format;
+use crate::error::{InternalError, TestError};
 use format::suit::{ConditionsCfg, Conditions};
 use format::suit::{ConnectCfg, NodeCfg, PolkaLaunchCfg, ProcessRunCfg};
 use client::SupportedRuntime;
@@ -20,7 +21,8 @@ pub type Nodes = BTreeMap<String, NodeCfg>;
 pub type Clients = BTreeMap<String, NodeRuntimeApi>;
 pub type ProcState = ();
 
-pub async fn create_clients_for_nodes(cfg: ConnectCfg) -> BoxRes<(Nodes, Clients)> {
+// pub async fn create_clients_for_nodes(cfg: ConnectCfg) -> BoxRes<(Nodes, Clients)> {
+pub async fn create_clients_for_nodes(cfg: ConnectCfg) -> Result<(Nodes, Clients), InternalError> {
     let mut nodes = BTreeMap::new();
 
     for node in cfg.nodes.into_iter() {
@@ -32,7 +34,8 @@ pub async fn create_clients_for_nodes(cfg: ConnectCfg) -> BoxRes<(Nodes, Clients
     Ok((nodes, clients))
 }
 
-pub async fn make_clients(nodes: &Nodes) -> BoxRes<Clients> {
+// pub async fn make_clients(nodes: &Nodes) -> BoxRes<Clients> {
+pub async fn make_clients(nodes: &Nodes) -> Result<Clients, InternalError> {
     let mut clients = BTreeMap::new();
     for (name, node) in nodes.iter() {
         // TODO: support custom ip

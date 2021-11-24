@@ -106,10 +106,13 @@ pub struct ConditionsCfg {
 #[serde(rename_all = "kebab-case")]
 pub enum Conditions {
     Result(Map<String, Value>),
+    /// Check existance of all specified events
     Events(Map<String, Value>),
     /// Check existance of event
     Event(Option<String>),
+    /// Find a line int stdout includes specified string
     Stdout(String),
+    /// Find a line int stderr includes specified string
     Stderr(String),
 
     /// Check and compare conditions for every stream/state update
@@ -234,12 +237,12 @@ pub fn serialize_str(doc: &TestSuitCfg) -> Result<String, impl std::error::Error
     serde_yaml::to_string(doc)
 }
 
-// #[cfg(test)]
-// mod tests {
-// 	use super::*;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-// 	static TEST_SUIT: &str = include_str!("../../examples/cases/case-a.yaml");
+    static TEST_SUIT: &str = include_str!("../../examples/cases/case-test.yaml");
 
-// 	#[test]
-// 	fn read_example_case() { deserialize_str::<_, TestSuitCfg>(TEST_SUIT).unwrap(); }
-// }
+    #[test]
+    fn read_example_case() { deserialize_str::<_, TestSuitCfg>(TEST_SUIT).unwrap(); }
+}

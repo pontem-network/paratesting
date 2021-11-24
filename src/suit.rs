@@ -4,17 +4,6 @@ use crate::BoxErr;
 use crate::format;
 use format::suit::TestSuitCfg;
 
-pub struct TestSuite<Cfg> {
-    cfg: Cfg,
-}
-
-impl<Cfg> TestSuite<Cfg> {
-    pub fn new(cfg: Cfg) -> Self {
-        //
-        Self { cfg }
-    }
-}
-
 pub fn load_test_suit(path: &Path) -> Result<TestSuitCfg, BoxErr> {
     println!("loading test-suit {}", path.display());
     let f = std::fs::File::open(path)?;
