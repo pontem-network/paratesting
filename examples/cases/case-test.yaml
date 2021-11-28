@@ -1,0 +1,85 @@
+%YAML 1.2
+---
+logging: debug
+
+setup:
+  ## three options for setup:
+  ## - launch for polkadot-launch
+  ## - process for custom executable, script, etc...
+  ## - connect for just connect to specified nodes
+
+  # launch:
+  #   pwd: ./nodes
+  #   cfg: launch-config.json
+  #   success:
+  #     wait:
+  #       stdout: "🚀 POLKADOT LAUNCH COMPLETE 🚀"
+  #       secs: 120
+
+  process:
+    pwd: ./nodes
+    cmd: polkadot-launch launch-config.json
+    keep-alive: true
+    success:
+      wait:
+        stdout: "🚀 POLKADOT LAUNCH COMPLETE 🚀"
+        secs: 120
+    failure:
+      stderr: error
+    connect:
+      nodes:
+        - name: Pontem
+          port: 9946
+          log-file: 9946.log
+          runtime: pontem
+        - name: Alice
+          port: 9944
+          log-file: alice.log
+          runtime: rococo
+        - name: Bob
+          port: 9945
+          runtime: rococo
+
+  # connect:
+  #   nodes:
+  #     - name: Pontem
+  #       port: 9946
+  #       log-file: 9946.log
+  #       runtime: pontem
+  #     - name: Alice
+  #       port: 9944
+  #       log-file: alice.log
+  #       runtime: rococo
+  #     - name: Bob
+  #       port: 9945
+  #       runtime: rococo
+
+tests:
+  - name: simple balance transfer
+    steps:
+      - name: test call
+        nodes:
+          - Pontem
+        call:
+          method: tx.balances.transfer
+          args:
+            - Bob
+            - "10000"
+          signer: //Alice
+        success:
+          events:
+            Balances::Transfer: true
+          # result:
+          #   nonce: 0
+          #   data.free: 10.0000 kUnit
+
+      - name: test balances
+        nodes:
+          - Pontem
+        call:
+          method: storage.system.account
+          args: [Alice]
+          # signer: //Alice
+        # success:
+        #   free: value < 1000000000
+

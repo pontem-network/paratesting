@@ -1,0 +1,18 @@
+%YAML 1.2
+---
+logging: debug
+
+setup:
+  process:
+    pwd: tests/assets
+    cmd: ./stderr+stdout.sh
+    keep-alive: false
+    # should fail
+    success:
+      stdout: OK
+    failure:
+      stderr: ERR
+    connect:
+      nodes: []
+
+tests: []

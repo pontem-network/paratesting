@@ -1,0 +1,65 @@
+name: Tests
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+env:
+  RUSTUP_MAX_RETRIES: 10
+  CARGO_INCREMENTAL: 1
+  CARGO_NET_RETRY: 10
+  CARGO_TERM_COLOR: always
+  RUST_LOG: trace,async_io=info,async_std=info,polling=info
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ${{ matrix.cfg.os }}
+    if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
+
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      fail-fast: false
+      matrix:
+        pontem: [todo]
+        dove: [1.3.3]
+        cfg:
+          - os: macos-latest
+          - os: ubuntu-latest
+        toolchain: [nightly]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.toolchain }}
+          profile: minimal
+          components: rustfmt, clippy
+          override: false
+
+      - name: Check formatting
+        run: cargo fmt -- --check
+
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.dove
+          key: ${{ matrix.cfg.os }}-dove-${{ matrix.dove }}
+      - name: get Dove
+        uses: pontem-network/get-dove@main
+        with:
+          prerelease: true
+          version: ${{ matrix.dove }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Unit-Tests
+        run: cargo test --all --no-fail-fast -- --nocapture
+
+      - name: CLI-Tests
+        run: cargo run -- -i tests/assets

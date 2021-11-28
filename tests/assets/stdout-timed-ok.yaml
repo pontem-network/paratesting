@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+logging: debug
+
+setup:
+  process:
+    pwd: tests/assets
+    cmd: ./wait-stdout.sh
+    keep-alive: false
+    success:
+      wait:
+        stdout: OK
+        secs: 10
+    connect:
+      nodes: []
+
+tests: []
