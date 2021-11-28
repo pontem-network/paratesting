@@ -13,6 +13,7 @@ pub mod error {
     use sp_core::crypto::SecretStringError;
     use sp_keyring::sr25519::ParseKeyringError;
 
+    #[non_exhaustive]
     #[derive(thiserror::Error, Debug)]
     pub enum Error {
         #[error("{0:?}")]

@@ -63,44 +63,44 @@ pub async fn call_to_node(client: &NodeRuntimeApi,
                     same_for_all!(client, |api| {
                         let mut iter = api.storage().system().account_iter(None).await?;
                         while let Some((key, account)) = iter.next().await? {
-                            // println!("{}: {}, nonce: {}, ", hex::encode(&key), account.data.free, account.nonce);
-                            println!("{:?}", account);
+                            // debug!("{}: {}, nonce: {}, ", hex::encode(&key), account.data.free, account.nonce);
+                            debug!("{:?}", account);
                             // AccountInfo { nonce: 0, consumers: 1, providers: 1, sufficients: 0, data: AccountData { free: 899990000000000, reserved: 100010000000000, misc_frozen: 100000000000000, fee_frozen: 0 } }
                         }
 
                         let dest = keys::id_from_str("Alice").unwrap();
                         let info = api.storage().system().account(dest, None).await?;
-                        println!("Alice: {:?}", info);
+                        debug!("Alice: {:?}", info);
                     });
                 }
                 _ => unimplemented!("not supported option {}", c),
             },
+            #[cfg(feature = "runtime-pontem")]
             "mvm" => match c {
                 "vm_storage" | "vm-storage" => {
-                    // match client {
-                    //     NodeRuntimeApi::Pontem(api, ..) => {
-                    //         println!("pontem.move STORAGE:");
-                    //         let mut iter =
-                    //             api.storage().mvm().vm_storage_iter(None).await?;
-                    //         while let Some((key, value)) = iter.next().await? {
-                    //             println!("{}: {}", hex::encode(key), hex::encode(value));
-                    //         }
+                    match client {
+                        NodeRuntimeApi::Pontem(api, ..) => {
+                            debug!("pontem.move STORAGE:");
+                            let mut iter = api.storage().mvm().vm_storage_iter(None).await?;
+                            while let Some((key, value)) = iter.next().await? {
+                                debug!("{}: {}", hex::encode(key), hex::encode(value));
+                            }
 
-                    //         //
-                    //         println!("pontem.move STORAGE::28e050611b6cb9358721c8...");
-                    //         const KEY:&str = "28e050611b6cb9358721c8a9dc75e9420732facf0c850d01d69e1e24eecdc59d173e987efeeb8fb5ef42b68733193845a0000000000000000000000000000000000000000000000000000000000000000001064469656d4964";
-                    //         let bytes = hex::decode(KEY).expect("cannot decode key");
-                    //         println!("key: {}", hex::encode(&bytes));
-                    //         let value = api.storage()
-                    //                        .mvm()
-                    //                        .vm_storage(bytes, None)
-                    //                        .await
-                    //                        .expect("cannot get storage by key");
-                    //         println!("pontem.move STORAGE::28e050611b6cb9358721c8...: {:?}",
-                    //                  value.map(|v| hex::encode(v)));
-                    //     }
-                    //     _ => unimplemented!("feature not supported for {} runtime", client),
-                    // }
+                            // test read
+                            debug!("pontem.move STORAGE::28e050611b6cb9358721c8...");
+                            const KEY:&str = "28e050611b6cb9358721c8a9dc75e9420732facf0c850d01d69e1e24eecdc59d173e987efeeb8fb5ef42b68733193845a0000000000000000000000000000000000000000000000000000000000000000001064469656d4964";
+                            let bytes = hex::decode(KEY).expect("cannot decode key");
+                            debug!("key: {}", hex::encode(&bytes));
+                            let value = api.storage()
+                                           .mvm()
+                                           .vm_storage(bytes, None)
+                                           .await
+                                           .expect("cannot get storage by key");
+                            debug!("pontem.move STORAGE::28e050611b6cb9358721c8...: {:?}",
+                                   value.map(|v| hex::encode(v)));
+                        }
+                        _ => unimplemented!("feature not supported for {} runtime", client),
+                    }
                 }
                 _ => unimplemented!("not supported option {}", c),
             },
@@ -121,16 +121,11 @@ pub async fn call_to_node(client: &NodeRuntimeApi,
 
 
                             same_for_all!(client, |api| {
-                                println!("TRANSFER: {}({:?})", call.method, call.args);
+                                debug!("send transfer: {}({:?})", call.method, call.args);
 
                                 // send transfer
 
                                 use client::sp_core::Pair;
-                                // // let pair = subxt::sp_core::sr25519::Pair::from_string("//Alice", None).unwrap();
-                                // let pair: subxt::sp_core::sr25519::Pair = keys::pair_from_str("//Alice").unwrap();
-
-                                // let dest: client::sp_runtime::AccountId32 = pair.clone().public().into();
-                                // let dest = subxt::sp_runtime::MultiAddress::from(dest);
 
                                 let signer = if let Some(signer) = call.signer.as_ref() {
                                     keys::signer_from_str(signer).unwrap()
@@ -152,8 +147,8 @@ pub async fn call_to_node(client: &NodeRuntimeApi,
                                                 .sign_and_submit_then_watch(&signer)
                                                 // default check:
                                                 .and_then(|result| async {
-                                                    println!("RESULT: {} :: {}", result.block, result.extrinsic);
-                                                    // println!("RESULT.EVENTS: {:#?}", result.events);
+                                                    debug!("result: {} :: {}", result.block, result.extrinsic);
+                                                    debug!("result.events: {:#?}", result.events);
 
                                                     // check result
                                                     // event:
@@ -163,12 +158,12 @@ pub async fn call_to_node(client: &NodeRuntimeApi,
                                                     // - Err(CodecError) -> Err(CodecError)
                                                     //
                                                     // Ok(e) -> put into ctx
-                                                    println!("EVENT: {:#?}", e);
+                                                    debug!("event: {:#?}", e);
 
                                                     // const ID: &str = "Balances::Transfer";
 
                                                     if let Some(event) = e? {
-                                                        println!("Balance transfer success: value: {:?}", event.2);
+                                                        info!("Balance transfer success: value: {:?}", event.2);
 
                                                         // crate::eval::add_events_to_context(ctx, &result.events)?;
 
@@ -176,7 +171,7 @@ pub async fn call_to_node(client: &NodeRuntimeApi,
                                                         let from = format!("{}", from.to_ss58check());
                                                         let to = format!("{}", to.to_ss58check());
                                                     } else {
-                                                        println!("Failed to find Balances::Transfer Event");
+                                                        error!("Failed to find Balances::Transfer Event");
                                                         // TODO: should fail the step
                                                     }
                                                     Ok(result)
@@ -184,7 +179,8 @@ pub async fn call_to_node(client: &NodeRuntimeApi,
                                                 // .then(check_ext_result)
                                                 .await?;
                                 // TODO: continue
-                                println!("COMPLETE: {} :: {}", result.block, result.extrinsic);
+                                info!("transfer complete for block: {}, extr: {}",
+                                      result.block, result.extrinsic);
                             });
                         }
                         _ => unimplemented!(),
@@ -203,10 +199,9 @@ pub async fn call_to_node(client: &NodeRuntimeApi,
 use client::keys;
 
 
-// async fn check_ext_result<T>(result: Result<subxt::ExtrinsicSuccess<T>, subxt::Error>)
-//                              -> Result<subxt::ExtrinsicSuccess<T>, BoxErr>
-//     where T: subxt::Config {
-//     // result.map();
-
-//     Ok(result)
-// }
+async fn check_ext_result<T>(result: Result<subxt::ExtrinsicSuccess<T>, subxt::Error>)
+                             -> Result<subxt::ExtrinsicSuccess<T>, BoxErr>
+    where T: subxt::Config {
+    // eval exprs
+    Ok(result?)
+}

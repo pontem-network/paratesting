@@ -1,7 +1,6 @@
 use std::ffi::OsStr;
 use std::collections::BTreeMap;
 use std::path::{PathBuf, Path};
-use std::io::BufRead;
 use std::io::BufReader;
 
 use client::NodeRuntimeApi;
@@ -106,7 +105,6 @@ pub async fn watch_proc(mut p: Popen, conditions: ConditionsCfg, keep_alive: boo
     }
 
     // use async_std::future::*;
-    use async_std::future::Future;
     use async_std::future;
     use futures::future::FutureExt;
     use futures::future::Either;
@@ -163,58 +161,73 @@ pub async fn watch_proc(mut p: Popen, conditions: ConditionsCfg, keep_alive: boo
         Either::Right(future::pending::<BoxRes<BoxRes<bool>>>())
     };
 
-    // use futures::future::FutureExt;
     let success = success.into_future();
     {
         use futures_lite::future::FutureExt;
         let res = success.race(failure).await;
-        println!("RACE RESULT: {:?}", res);
+        trace!("race(success or failure) result: {:?}", res);
 
         match res {
             Err(err) | Ok(Err(err)) => {
                 p.terminate().ok();
-                println!("setup success conditions aren't met, error: {}", err);
+                error!("setup success conditions aren't met, error: {}", err);
                 return Err(err);
             }
             Ok(Ok(false)) => {
                 p.terminate().ok();
                 let reason = "setup success conditions aren't met".to_owned();
-                println!("{}", reason);
+                error!("{}", reason);
                 return Err(ProcWatchError::Fail { reason }.into());
             }
             Ok(Ok(true)) => {
+                // TODO: FIXME: Here we should not terminate the process, but must just wait completion
                 if !keep_alive {
                     p.terminate().ok();
                 }
-                println!("setup successfully complete");
+                info!("setup successfully complete");
             }
         }
     }
-
-    // let (res, i, remaining) = futures::future::select_all([Either::Left(success), Either::Right(failure)]).await;
-    // let (res, i, remaining) = futures::future::select_all([success.into_future(), failure.into_future()]).await;
-    // println!("SELECT RESULT: {:?} ({}/{})", res, i, remaining.len());
 
     Ok(())
 }
 
 /* WATCHER methods */
 
-/// FIXME: There's potential bug and block because of blocking io.
-/// We should use async_std::BufReader -> Lines -> Stream -> Find.
-pub async fn find_in_buf_reader(reader: BufReader<&mut std::fs::File>,
-                                expected: String)
-                                -> Result<bool, BoxErr> {
-    let res = reader.lines()
-                    .find(|s| {
-                        println!("{:?}", s);
-                        s.as_ref()
-                         .map(|s| s.trim().contains(&expected))
-                         .unwrap_or(false)
-                    })
-                    .is_some();
-    println!("END! success: {}", res);
-    Ok(res)
+use ext::find_in_buf_reader;
+mod ext {
+    use super::*;
+    use async_std::io::prelude::*;
+    use async_std::io::BufReader;
+    use async_std::io::BufRead;
+    use async_std::fs::File;
+    use async_std::stream::StreamExt;
+
+
+    pub async fn find_in_buf_reader(reader: std::io::BufReader<&mut std::fs::File>,
+                                    expected: String)
+                                    -> Result<bool, BoxErr> {
+        let f = reader.into_inner();
+        let clone = f.try_clone()?;
+        let f = async_std::fs::File::from(clone);
+        let reader = BufReader::new(f);
+        let res = reader.lines()
+                        .find(|s| {
+                            s.as_ref()
+                            // just log:
+                             .map(|s| {
+                                // TODO: print this only if user-prefered & configured:
+                                trace!("> {}", s);
+                                s
+                             })
+                             .map(|s| s.trim().contains(&expected))
+                             .unwrap_or(false)
+                        })
+                        .await
+                        .is_some();
+        trace!("find_in_buf end with success: {}", res);
+        Ok(res)
+    }
 }
 /* WATCHER END */
 

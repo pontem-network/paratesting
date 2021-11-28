@@ -5,7 +5,7 @@ use crate::format;
 use format::suit::TestSuitCfg;
 
 pub fn load_test_suit(path: &Path) -> Result<TestSuitCfg, BoxErr> {
-    println!("loading test-suit {}", path.display());
+    trace!("loading suit from {}", path.display());
     let f = std::fs::File::open(path)?;
     let res = format::suit::deserialize(f).map(|mut cfg: TestSuitCfg| {
                                               // add fallback values if needed
@@ -20,7 +20,7 @@ pub fn load_test_suit(path: &Path) -> Result<TestSuitCfg, BoxErr> {
                                               }
                                               cfg
                                           });
-    println!("deserialize test-suit {:?}", res);
+    trace!("\t suit deserialized: {}", res.is_ok());
     Ok(res?)
 }
 
@@ -35,7 +35,7 @@ pub fn get_suits_files(path: &Path) -> Result<Vec<PathBuf>, BoxErr> {
                                     let path = f.ok().map(|f| f.path());
 
                                     if let Some(p) = path {
-                                        println!("path: {}", p.as_path().display());
+                                        // trace!("path: {}", p.as_path().display());
                                         if let Some(ext) = p.extension()
                                                             .map(|f| f.to_str())
                                                             .flatten()

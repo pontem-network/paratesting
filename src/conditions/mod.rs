@@ -26,5 +26,4 @@ impl<T> ConditionsChecker<T> {
 impl<T: client::subxt::Config> ConditionsChecker<client::subxt::ExtrinsicSuccess<T>> {}
 
 
-
 impl ConditionsChecker<subprocess::Popen> {}

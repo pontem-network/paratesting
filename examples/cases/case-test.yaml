@@ -16,62 +16,62 @@ setup:
   #       stdout: "🚀 POLKADOT LAUNCH COMPLETE 🚀"
   #       secs: 120
 
-  # process:
-  #   pwd: ./nodes
-  #   cmd: polkadot-launch launch-config.json
-  #   keep-alive: true
-  #   success:
-  #     wait:
-  #       stdout: "🚀 POLKADOT LAUNCH COMPLETE 🚀"
-  #       secs: 120
-  #   failure:
-  #     stderr: error
-  #   connect:
-  #     nodes:
-  #       - name: Pontem
-  #         port: 9946
-  #         log-file: 9946.log
-  #         runtime: pontem
-  #       - name: Alice
-  #         port: 9944
-  #         log-file: alice.log
-  #         runtime: rococo
-  #       - name: Bob
-  #         port: 9945
-  #         runtime: rococo
+  process:
+    pwd: ./nodes
+    cmd: polkadot-launch launch-config.json
+    keep-alive: true
+    success:
+      wait:
+        stdout: "🚀 POLKADOT LAUNCH COMPLETE 🚀"
+        secs: 120
+    failure:
+      stderr: error
+    connect:
+      nodes:
+        - name: Pontem
+          port: 9946
+          log-file: 9946.log
+          runtime: pontem
+        - name: Alice
+          port: 9944
+          log-file: alice.log
+          runtime: rococo
+        - name: Bob
+          port: 9945
+          runtime: rococo
 
-  connect:
-    nodes:
-      - name: Pontem
-        port: 9946
-        log-file: 9946.log
-        runtime: pontem
-      - name: Alice
-        port: 9944
-        log-file: alice.log
-        runtime: rococo
-      - name: Bob
-        port: 9945
-        runtime: rococo
+  # connect:
+  #   nodes:
+  #     - name: Pontem
+  #       port: 9946
+  #       log-file: 9946.log
+  #       runtime: pontem
+  #     - name: Alice
+  #       port: 9944
+  #       log-file: alice.log
+  #       runtime: rococo
+  #     - name: Bob
+  #       port: 9945
+  #       runtime: rococo
 
 tests:
   - name: simple balance transfer
     steps:
-      # - name: test call
-      #   nodes:
-      #     - Pontem
-      #   call:
-      #     method: tx.balances.transfer
-      #     args:
-      #       - Bob
-      #       - "10000"
-      #     signer: //Alice
-      #   success:
-      #     events:
-      #       Balances::Transfer: true
-      #     # result:
-      #     #   nonce: 0
-      #     #   data.free: 10.0000 kUnit
+      - name: test call
+        nodes:
+          - Pontem
+        call:
+          method: tx.balances.transfer
+          args:
+            - Bob
+            - "10000"
+          signer: //Alice
+        success:
+          events:
+            Balances::Transfer: true
+          # result:
+          #   nonce: 0
+          #   data.free: 10.0000 kUnit
 
       - name: test balances
         nodes:
@@ -80,27 +80,6 @@ tests:
           method: storage.system.account
           args: [Alice]
           # signer: //Alice
-        success:
-          events:
-            Balances::Transfer: true
-          # result:
-          #   nonce: 0
-          #   data.free: 10.0000 kUnit
+        # success:
+        #   free: value < 1000000000
 
-      # - name: test call 2
-      #   nodes:
-      #     - Pontem
-      #     # - Bob
-      #   # rpc:
-      #   #   method: state_getMetadata
-      #   #   args: []
-      #   call:
-      #     method: tx.balances.transfer
-      #     args:
-      #       - //Bob
-      #       - "10000"
-      #     signer: //Alice
-      #   success:
-      #     result:
-      #       nonce: 0
-      #       data.free: 10.0000 kUnit

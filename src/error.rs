@@ -1,13 +1,20 @@
 use thiserror::Error;
 use client::subxt::Error as SubxtError;
 
+#[non_exhaustive]
 #[derive(Error, Debug)]
 pub enum InternalError {
     #[error(transparent)]
     Error(#[from] crate::BoxErr),
 
     #[error(transparent)]
+    IoError(#[from] std::io::Error),
+
+    #[error(transparent)]
     ClientError(#[from] SubxtError),
+
+    #[error(transparent)]
+    ProcError(#[from] subprocess::PopenError),
 
     #[error("Feature `{0}` is not supported")]
     Unsupported(String),
@@ -16,8 +23,17 @@ pub enum InternalError {
     Other(String),
 }
 
+#[non_exhaustive]
 #[derive(Error, Debug)]
 pub enum TestError {
+    /// Success doesn't happen becouse time is out of specified limit.
+    #[error("Conditions out of time")]
+    Timeout(#[from] async_std::future::TimeoutError),
+
+    /// Failure conditions are met.
+    #[error("Feature: `{0}`")]
+    Feature(String),
+
     #[error(transparent)]
     Error(#[from] crate::BoxErr),
 

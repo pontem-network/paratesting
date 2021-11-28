@@ -1,3 +1,4 @@
+#![feature(never_type)]
 #![feature(box_patterns)]
 #![feature(async_closure)]
 
@@ -8,10 +9,10 @@ extern crate subprocess;
 extern crate log;
 
 pub mod logger;
+pub mod format;
 pub mod error;
 pub mod setup;
-pub mod format;
-pub mod launcher;
+pub mod task;
 pub mod suit;
 pub mod api;
 pub mod conditions;
@@ -26,13 +27,12 @@ use format::suit::PolkaLaunchCfg;
 use format::suit::{ConnectCfg, NodeCfg};
 use format::suit::{Test, Step, CallData};
 use format::suit::Action;
-use launcher::{Setup, Launcher};
 use setup::{Nodes, Clients};
 use client::NodeRuntimeApi;
 use conditions::eval::Ctx;
 
 pub type BoxErr = Box<dyn std::error::Error>;
-pub type BoxRes<T, E = BoxErr> = Result<T, E>;
+pub type BoxRes<T, E = BoxErr> = color_eyre::eyre::Result<T, E>;
 
 
 use client::{subxt, sp_keyring};
@@ -45,7 +45,7 @@ use subxt::ExtrinsicExtraData;
 
 fn filter_map_for_step<'a, T>(map: &'a BTreeMap<String, T>,
                               step: &'a Step)
-                              -> Result<impl Iterator<Item = (&'a str, &'a T)> + 'a, BoxErr> {
+                              -> BoxRes<impl Iterator<Item = (&'a str, &'a T)> + 'a> {
     Ok(map.into_iter().filter_map(|(name, v)| {
                           // TODO: case-insensitive comparison
                           if step.nodes.contains(name) {
@@ -56,26 +56,35 @@ fn filter_map_for_step<'a, T>(map: &'a BTreeMap<String, T>,
                       }))
 }
 
-async fn do_test_step(nodes: &Nodes,
-                      clients: &Clients,
-                      step: &Step,
-                      ctx: &mut Ctx)
-                      -> Result<(), BoxErr> {
+async fn do_test_step(nodes: &Nodes, clients: &Clients, step: &Step, ctx: &mut Ctx) -> BoxRes<()> {
     let _nodes = filter_map_for_step(nodes, step)?;
     let clients = filter_map_for_step(clients, step)?;
 
     match &step.action {
         Action::Call { data } => {
             for (name, client) in clients {
-                println!("\t call for node {}", name);
+                trace!("call for node {}", name);
                 // TODO: report if error, then break the test
                 let res = api::call_to_node(client, data, ctx).await?;
             }
         }
 
-        Action::Rpc { method, args } => {
-            println!("TODO: rpc: {}({})", method, args.len());
-            unimplemented!()
+        Action::Read { .. } => {
+            for (name, ..) in clients {
+                trace!("read from node {}", name);
+            }
+            todo!()
+        }
+
+        Action::Rpc { method, .. } => {
+            for (name, ..) in clients {
+                trace!("send raw-rpc call `{}` to node {}", method, name);
+                /*  TODO:
+                    client.rpc().client
+                                .request::<serde_json::Value>("rpc_methods", &[])
+                */
+            }
+            todo!()
         }
 
         _ => unimplemented!(),
@@ -83,6 +92,7 @@ async fn do_test_step(nodes: &Nodes,
 
     Ok(())
 }
+
 
 #[derive(StructOpt, Debug)]
 struct Args {
@@ -94,24 +104,27 @@ struct Args {
 
 
 #[async_std::main]
-async fn main() -> Result<(), BoxErr> {
+async fn main() -> BoxRes<()> {
+    color_eyre::install()?;
     logger::init_logger();
 
     // TODO: use from_args_safe for github, then error!(err).
     let opt = Args::from_args();
-    println!("{:#?}", opt);
 
     // TODO: get dir/file-path from args
     // let suits = suit::load_requested_suits(&PathBuf::from(TEST_SUITS_DIR))?.collect::<Vec<_>>();
     let suits = suit::load_requested_suits(&opt.input)?.collect::<Vec<_>>();
-    println!("loaded {} suits", suits.len());
+    trace!("loaded {} suits", suits.len());
 
     for suit in suits {
+        trace!("start suit '{}'",
+               suit.name.unwrap_or("unknown".to_string()));
         // let suit = TestSuite::new(suit);
         // let setup = Setup { cfg: &suit.setup };
 
         let mut keep_alive_proc = None::<setup::ProcState>;
 
+        trace!("setting-up...");
         let (nodes, clients) = match suit.setup {
             SetupCfg::PolkaLaunch { cfg, conditions } => {
                 let (nodes, clients, proc) = setup::run_polka_launch_proc(cfg, conditions).await?;
@@ -130,13 +143,13 @@ async fn main() -> Result<(), BoxErr> {
         };
 
         for test in suit.tests {
-            println!("test {}", test.name);
+            info!("test {}", test.name);
 
             // eval context:
             let mut ctx = conditions::eval::create_test_context()?;
 
             for step in test.steps {
-                println!("step {}", step.name);
+                info!("step {}", step.name);
 
                 do_test_step(&nodes, &clients, &step, &mut ctx).await?;
             }
@@ -146,20 +159,6 @@ async fn main() -> Result<(), BoxErr> {
             // send TERM
         }
     }
-
-    /*
-         client.rpc()
-                         .client
-                         .request::<serde_json::Value>("rpc_methods", &[])
-
-
-         // event:
-         if let Some(event) = result.find_event::<polkadot::balances::events::Transfer>()? {
-              println!("Balance transfer success: value: {:?}", event.2);
-         } else {
-              println!("Failed to find Balances::Transfer Event");
-         }
-    */
 
     Ok(())
 }

@@ -90,6 +90,7 @@ pub struct ProcessRunCfg<Cmd = String, KeepAlive = bool> {
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+// TODO: parametrize with for example ProcConditions, CallConditions
 pub struct ConditionsCfg {
     pub success: Option<Conditions>,
     pub failure: Option<Conditions>,
@@ -176,10 +177,25 @@ pub struct Step {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum Action {
+    /// Execute sub-process
+    Run {
+        #[serde(flatten)]
+        data: ProcessRunCfg<String, ()>,
+    },
+
+    /// Send extrinsic call
     Call {
         #[serde(flatten)]
         data: CallData,
     },
+
+    /// Query data from storage
+    Read {
+        #[serde(flatten)]
+        // TODO: impl
+        data: (),
+    },
+
     /// Raw rpc call
     Rpc { method: String, args: Vec<Value> },
 }
