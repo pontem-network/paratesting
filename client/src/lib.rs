@@ -28,6 +28,12 @@ pub type BoxErr = Box<dyn std::error::Error>;
 pub type BoxRes<T, E = BoxErr> = Result<T, E>;
 
 
+#[rustfmt::skip]
+#[cfg(feature = "runtime-custom")]
+#[subxt::subxt(runtime_metadata_path = "../metadata/custom.scale",
+               generated_type_derives = "Clone, Debug")]
+pub mod custom { compile_error!("not implemented"); }
+
 #[cfg(feature = "runtime-polkadot")]
 #[subxt::subxt(runtime_metadata_path = "../metadata/polkadot_metadata.scale",
                generated_type_derives = "Clone, Debug")]

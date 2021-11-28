@@ -75,6 +75,7 @@ github = []
 runtime-pontem = ["client/runtime-pontem"]
 runtime-polkadot = ["client/runtime-polkadot"]
 runtime-rococo = ["client/runtime-rococo"]
+runtime-custom = ["client/runtime-custom"]
 
 
 [profile.dev.package.backtrace]

@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+logging: debug
+
+setup:
+  process:
+    pwd: tests/assets
+    cmd: ./wait-stderr.sh
+    keep-alive: false
+    success:
+      wait:
+        stderr: ERR
+        secs: 10
+    connect:
+      nodes: []
+
+tests: []

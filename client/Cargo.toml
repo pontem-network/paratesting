@@ -50,3 +50,4 @@ default = [
 runtime-pontem = []
 runtime-polkadot = []
 runtime-rococo = []
+runtime-custom = []
