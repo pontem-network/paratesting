@@ -155,8 +155,8 @@ async fn watch_std(stdout: async_std::fs::File,
     timed.await?
 }
 
-use ext::find_in_buf_reader;
-mod ext {
+use io::find_in_buf_reader;
+mod io {
     use super::*;
     use async_std::io::prelude::*;
     use async_std::io::BufReader;

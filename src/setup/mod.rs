@@ -194,8 +194,8 @@ pub async fn watch_proc(mut p: Popen, conditions: ConditionsCfg, keep_alive: boo
 
 /* WATCHER methods */
 
-use ext::find_in_buf_reader;
-mod ext {
+use io::find_in_buf_reader;
+mod io {
     use super::*;
     use async_std::io::prelude::*;
     use async_std::io::BufReader;
