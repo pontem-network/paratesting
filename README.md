@@ -18,7 +18,7 @@ Any contributions are highly welcome and will be appreciated ❤️.
 ## Usage
 
 Prerequisites:
-- to run nodes one of nex options:
+- to run nodes one of the following options:
 	- installed [polkadot-launch][] bin package (optional but gives easy setup)
 		- polkadot-launch config for parachain in `../../substrate/node`
 	- other tool or script
