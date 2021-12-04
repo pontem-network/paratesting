@@ -46,6 +46,11 @@ jobs:
       - name: Check formatting
         run: cargo fmt -- --check
 
+      - uses: actions-rs/clippy-check@v1
+        with:
+          args: --all --no-deps
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Cache
         uses: actions/cache@v2
         with:
