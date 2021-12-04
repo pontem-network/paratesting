@@ -91,6 +91,7 @@ pub struct ProcessRunCfg<Cmd = String, KeepAlive = bool> {
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 // TODO: parametrize with for example ProcConditions, CallConditions
+// pub struct ConditionsCfg<Conditions: Serialize + DeserializeOwned = self::Conditions> {
 pub struct ConditionsCfg {
     pub success: Option<Conditions>,
     pub failure: Option<Conditions>,

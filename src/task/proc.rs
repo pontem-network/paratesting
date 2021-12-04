@@ -9,6 +9,9 @@ use async_std::future;
 use futures::future::Either;
 use futures::channel::oneshot;
 
+// use cfg::ProcConditions as Conditions;
+use cfg::ProcConditionsLimited as Conditions;
+pub type ConditionsCfg = crate::conditions::cfg::ConditionsCfg<Conditions>;
 
 use crate::error::{InternalError, TestError};
 pub type Result<T, E = InternalError> = std::result::Result<T, E>;
@@ -85,7 +88,7 @@ pub async fn watch_proc(mut proc: Popen,
     };
 
     // TODO: don't do this, only wrapped to timeout
-    let (mut exit_watcher_breaker, exit_watcher) = if opts.keep_alive {
+    let (mut exit_watcher_breaker, exit_watcher) = if opts.keep_alive.unwrap_or(false) {
         (None, Either::Left(future::ready(Ok::<_, !>((proc, None::<ExitStatus>)))))
     } else {
         let (tx, rx) = oneshot::channel::<()>();
@@ -200,10 +203,9 @@ fn simplify_proc_conds(conds: &ConditionsCfg) -> Result<SimplifiedProcConds, Tes
         match conditions {
             Conditions::Stdout(s) => out = Some((s, None)),
             Conditions::Stderr(s) => err = Some((s, None)),
-            Conditions::Wait { box conditions,
-                               limit, } => match conditions {
-                Conditions::Stdout(s) => out = Some((s, Some(limit))),
-                Conditions::Stderr(s) => err = Some((s, Some(limit))),
+            Conditions::Wait { conditions, limit } => match conditions {
+                ProcConditions::Stdout(s) => out = Some((s, Some(limit))),
+                ProcConditions::Stderr(s) => err = Some((s, Some(limit))),
                 _ => {
                     return Err(TestError::Feature(format!("not supported option {:?}",
                                                           conditions)))
@@ -216,43 +218,70 @@ fn simplify_proc_conds(conds: &ConditionsCfg) -> Result<SimplifiedProcConds, Tes
 }
 
 
+use super::{Task, TaskCfg, TaskConditions};
+use async_trait::async_trait;
+
+pub struct ProcTask {}
+
+#[async_trait(?Send)]
+// impl<S: AsRef<OsStr> + serde::Serialize + serde::de::DeserializeOwned> Task<ProcRunCfg<S>> for ProcTask {
+impl Task<ProcRunCfg<String>> for ProcTask {
+    async fn run(self,
+                 cfg: ProcRunCfg<String>,
+                 conds: ConditionsCfg //  conds: <ProcRunCfg<String> as TaskCfg>::Conditions
+    ) -> Result<(), TestError> {
+        run(cfg, conds).await
+        // Ok(())
+    }
+}
+
+
+use serde::{Serialize, de::DeserializeOwned};
+impl<S: AsRef<OsStr>> TaskCfg for ProcRunCfg<S> where Self: Serialize + DeserializeOwned
+{
+    type Conditions = ProcConditionsLimited;
+}
+
+impl TaskConditions for ProcConditionsLimited {}
+
+
 use cfg::*;
 pub mod cfg {
     use std::ffi::OsStr;
     use std::path::PathBuf;
     use std::collections::BTreeMap as Map;
     use serde::{Serialize, Deserialize};
+    use serde_yaml::Value;
     // TODO: remove this:
     pub use crate::format::suit::ConditionsCfg;
-    pub use crate::format::suit::Conditions;
+    // pub use crate::format::suit::Conditions;
     pub use crate::format::suit::WaitLimit;
-    use serde_yaml::Value;
 
 
     #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
     #[serde(rename_all = "kebab-case")]
-    pub struct ProcRunCfg<Cmd: AsRef<OsStr> = String, KeepAlive = bool> {
+    pub struct ProcRunCfg<Cmd: AsRef<OsStr> = String> {
         pub pwd: Option<PathBuf>,
         pub cmd: Cmd,
         // TODO: shell
-        pub opts: ProcOpts<KeepAlive>,
+        pub opts: ProcOpts,
     }
 
     #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
     #[serde(rename_all = "kebab-case")]
-    pub struct ProcOpts<KeepAlive = bool> {
+    pub struct ProcOpts {
         /// Keep this process alive after success/failure conditions are come.
-        pub keep_alive: KeepAlive,
+        pub keep_alive: Option<bool>,
     }
 
     #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
     #[serde(rename_all = "kebab-case")]
-    pub enum ProcConditions {
-        Result(Map<String, Value>),
+    pub enum ProcConditionsLimited {
+        // Result(Map<String, Value>),
         /// Check existance of all specified events
-        Events(Map<String, Value>),
+        // Events(Map<String, Value>),
         /// Check existance of event
-        Event(String),
+        // Event(String),
         /// Find a line int stdout includes specified string
         Stdout(String),
         /// Find a line int stderr includes specified string
@@ -261,17 +290,32 @@ pub mod cfg {
         /// Check and compare conditions for every stream/state update
         Wait {
             #[serde(flatten)]
-            conditions: Box<Conditions>,
+            conditions: ProcConditions,
             #[serde(flatten)]
             limit: WaitLimit,
         },
+
         /// Check and compare conditions when reqirements are met.
         /// For example, when state satisfy the reqirements.
         When {
             #[serde(flatten)]
-            conditions: Box<Conditions>,
+            conditions: ProcConditions,
             #[serde(flatten)]
             reqirements: Map<String, Value>,
         },
+    }
+
+    #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+    #[serde(rename_all = "kebab-case")]
+    pub enum ProcConditions {
+        // Result(Map<String, Value>),
+        /// Check existance of all specified events
+        // Events(Map<String, Value>),
+        /// Check existance of event
+        // Event(String),
+        /// Find a line int stdout includes specified string
+        Stdout(String),
+        /// Find a line int stderr includes specified string
+        Stderr(String),
     }
 }

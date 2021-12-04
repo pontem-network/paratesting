@@ -1,6 +1,7 @@
 use crate::format::suit::{ConditionsCfg, Conditions};
 use crate::BoxErr;
 
+pub mod cfg;
 pub mod eval;
 
 
