@@ -134,7 +134,8 @@ async fn main() -> BoxRes<()> {
             SetupCfg::Process { cfg,
                                 conditions,
                                 connect, } => {
-                let proc = setup::run_proc(cfg, conditions).await?;
+                // let proc = setup::run_proc(cfg, conditions).await?;
+                let proc = task::proc::run(cfg, conditions).await?;
                 // TODO: keep_alive_proc = proc;
                 //
                 setup::create_clients_for_nodes(connect).await?

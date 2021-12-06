@@ -1,8 +1,8 @@
-use serde::{Serialize, Deserialize};
+use serde::{Serialize, Deserialize, de::DeserializeOwned};
 
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
-pub struct ConditionsCfg<Conditions> {
+pub struct Config<Conditions> {
     pub success: Option<Conditions>,
     pub failure: Option<Conditions>,
     /* TODO:
