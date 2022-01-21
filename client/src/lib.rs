@@ -9,14 +9,12 @@ use serde::{Serialize, Deserialize};
 
 pub use subxt::bitvec;
 pub use subxt::codec;
-pub use subxt::sp_arithmetic;
 pub use subxt::sp_core;
 pub use subxt::sp_runtime;
 
 use sp_keyring::AccountKeyring;
 use subxt::{ClientBuilder, PairSigner};
 use subxt::EventsDecoder;
-use subxt::ExtrinsicSuccess;
 use subxt::ExtrinsicExtraData;
 use subxt::sp_core::crypto::Ss58Codec;
 

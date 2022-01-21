@@ -3,8 +3,6 @@
 use client::subxt;
 use subxt::{ClientBuilder, PairSigner};
 use subxt::EventsDecoder;
-use subxt::ExtrinsicSuccess;
-// use subxt::codec;
 use subxt::ExtrinsicExtraData;
 use subxt::sp_core::crypto::Ss58Codec;
 use subxt::sp_core;
@@ -198,10 +196,9 @@ pub async fn call_to_node(client: &NodeRuntimeApi,
 
 use client::keys;
 
-
-async fn check_ext_result<T>(result: Result<subxt::ExtrinsicSuccess<T>, subxt::Error>)
-                             -> Result<subxt::ExtrinsicSuccess<T>, BoxErr>
-    where T: subxt::Config {
-    // eval exprs
-    Ok(result?)
-}
+// async fn check_ext_result<T>(result: Result<subxt::ExtrinsicSuccess<T>, subxt::Error>)
+//                              -> Result<subxt::ExtrinsicSuccess<T>, BoxErr>
+//     where T: subxt::Config {
+//     // eval exprs
+//     Ok(result?)
+// }

@@ -39,13 +39,13 @@ pub enum SetupCfg {
         #[serde(flatten)]
         cfg: PolkaLaunchCfg,
         #[serde(flatten)]
-        conditions: ConditionsCfg,
+        conditions: crate::task::proc::ConditionsCfg,
     },
     Process {
         #[serde(flatten)]
         cfg: ProcessRunCfg<String>,
         #[serde(flatten)]
-        conditions: ConditionsCfg,
+        conditions: crate::task::proc::ConditionsCfg,
         connect: ConnectCfg,
     },
 
@@ -72,36 +72,30 @@ pub struct NodeCfg {
     pub log_file: Option<PathBuf>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
-pub struct PolkaLaunchCfg {
-    #[serde(flatten)]
-    pub inner: ProcessRunCfg<Option<String>, Option<bool>>,
-    pub cfg: PathBuf,
-}
-
+/// Config for Polkadot-Launch tool extends process-task,
+/// but instead of `cmd` there is `cfg` field.
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "kebab-case")]
-pub struct ProcessRunCfg<Cmd = String, KeepAlive = bool> {
+pub struct PolkaLaunchCfg {
     pub pwd: Option<PathBuf>,
-    pub cmd: Cmd,
-    // TODO: shell
-    /// Keep this process alive after success/failure conditions are come.
-    pub keep_alive: KeepAlive,
+    pub cfg: PathBuf,
+    // TODO: this doesn't needed, remove it.
+    // It should be always `true` for polka-launch.
+    #[serde(flatten)]
+    pub opts: crate::task::proc::cfg::Opts,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
-// TODO: parametrize with for example ProcConditions, CallConditions
-pub struct ConditionsCfg {
-    pub success: Option<Conditions>,
-    pub failure: Option<Conditions>,
-    /* TODO:
-    /// Check and compare conditions when reqirements are met.
-    /// For example, when state satisfy the reqirements.
-    reqirements or when
-    #[serde(default)]
-    when: Map<String, Value>,
-    */
+impl Into<ProcessRunCfg<String>> for PolkaLaunchCfg {
+    fn into(self) -> ProcessRunCfg<String> {
+        ProcessRunCfg { pwd: self.pwd,
+                        cmd: format!("polkadot-launch {}", self.cfg.display()),
+                        opts: self.opts }
+    }
 }
+
+
+pub type ProcessRunCfg<S> = crate::task::proc::cfg::Config<S>;
+
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "kebab-case")]
@@ -169,9 +163,8 @@ pub struct Step {
 
     #[serde(flatten)]
     pub action: Action,
-
-    #[serde(flatten)]
-    pub conditions: ConditionsCfg,
+    // #[serde(flatten)]
+    // pub conditions: ConditionsCfg,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -180,7 +173,10 @@ pub enum Action {
     /// Execute sub-process
     Run {
         #[serde(flatten)]
-        data: ProcessRunCfg<String, ()>,
+        data: ProcessRunCfg<String>,
+
+        #[serde(flatten)]
+        conditions: crate::conditions::cfg::Config<crate::task::proc::cfg::Conditions>,
     },
 
     /// Send extrinsic call
