@@ -19,7 +19,7 @@ features = ["derive"]
 
 [dependencies.subxt]
 git = "https://github.com/pontem-network/subxt.git"
-rev = "bf05229dfa2238cf2629f9f49687862c730b24e5"
+rev = "6d736a11779ea55772e3475c394fe5ff69990015"
 
 [dependencies.codec]
 package = "parity-scale-codec"
